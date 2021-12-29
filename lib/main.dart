@@ -17,7 +17,7 @@ Future<void> main() async {
     home: firtTime == true ? IntroPage() : OnboardingPage(),
     routes: {
       '/Onboarding': (context) => OnboardingPage(),
-      '/Home': (context) => IntroPage()
+      '/Intro': (context) => IntroPage()
     },
   ));
 }
