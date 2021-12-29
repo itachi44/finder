@@ -11,3 +11,11 @@ On the other hand we have the client part where the client can come and make a s
 ## installation 
 
 #### run flutter pub get or open pubspec.yaml and press ctrl+S
+
+## configure environment variables for database connection
+
+#### 1. create an .env file in the project directory 
+
+#### 2. add environment variables
+
+#### 3. enjoy :-)
