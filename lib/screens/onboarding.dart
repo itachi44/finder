@@ -30,26 +30,22 @@ class _OnboardingPageState extends State<OnboardingPage>
     {
       'title': 'Modern \nOnboardingPage',
       'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image':
-          'https://images.unsplash.com/photo-1612015900986-4c4d017d1648?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTJ8fGZ1cm5pdHVyZXN8ZW58MHx8MHxibGFja3w%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60'
+      'image': 'assets/images/onboarding1.jpeg'
     },
     {
       'title': 'Modern \nFurniture',
       'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image':
-          'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZnVybml0dXJlc3xlbnwwfDF8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60'
+      'image': 'assets/images/onboarding2.jpeg'
     },
     {
       'title': 'Modern \nFurniture',
       'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image':
-          'https://images.unsplash.com/photo-1532499012374-fdfae50e73e9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8ZnVybml0dXJlc3xlbnwwfDF8MHxibGFja3w%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60'
+      'image': 'assets/images/onboarding3.jpeg'
     },
     {
       'title': 'Modern \nFurniture',
       'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image':
-          'https://images.unsplash.com/photo-1633555715049-0c2777ee516e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTl8fGZ1cm5pdHVyZXN8ZW58MHwxfDB8YmxhY2t8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60'
+      'image': 'assets/images/onboarding4.jpeg'
     }
   ];
 
@@ -79,7 +75,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                   decoration: BoxDecoration(),
                   child: ScaleTransition(
                     scale: _animation,
-                    child: Image.network(
+                    child: Image.asset(
                       _appartements[index]['image'],
                       fit: BoxFit.cover,
                     ),

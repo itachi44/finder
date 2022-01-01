@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:finder/components/scrollable_post.dart';
 
-class LogInPage extends StatefulWidget {
+class SeeAllPage extends StatefulWidget {
   @override
-  _LogInPageState createState() => _LogInPageState();
+  _SeeAllPageState createState() => _SeeAllPageState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _SeeAllPageState extends State<SeeAllPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
               title: Text(
-                "LogIn",
+                "See all posts",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -26,8 +27,10 @@ class _LogInPageState extends State<LogInPage> {
                 },
               ),
             ),
-            body: Center(
-              child: Text("Login page here"),
+            resizeToAvoidBottomInset: false,
+            //backgroundColor: Color(0xfff2f3f7),
+            body: Container(
+              child: ScrollablePostView(),
             )));
   }
 }

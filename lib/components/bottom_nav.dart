@@ -1,9 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-const double minHeight = 120;
+const double minHeight = 80;
 const double iconStartSize = 44;
 const double iconEndSize = 120;
 const double iconStartMarginTop = 36;
@@ -42,6 +41,7 @@ class _BottomNavState extends State<BottomNav>
 
   double iconLeftMargin(int index) =>
       lerp(index * (iconsHorizontalSpacing + iconStartSize), 0);
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -88,8 +88,7 @@ class _BottomNavState extends State<BottomNav>
                     fontSize: headerFontSize,
                     topMargin: headerTopMargin,
                   ),
-                  for (Event event in events) _buildFullItem(event),
-                  for (Event event in events) _buildIcon(event),
+                  _buildFilters(),
                 ],
               ),
             ),
@@ -99,37 +98,15 @@ class _BottomNavState extends State<BottomNav>
     );
   }
 
-  Widget _buildIcon(Event event) {
-    int index = events.indexOf(event);
-    return Positioned(
-      height: iconSize,
-      width: iconSize,
-      top: iconTopMargin(index),
-      left: iconLeftMargin(index),
-      child: ClipRRect(
-        borderRadius: BorderRadius.horizontal(
-          left: Radius.circular(iconLeftBorderRadius),
-          right: Radius.circular(iconRightBorderRadius),
-        ),
-        child: Image.asset(
-          'assets/images/${event.assetName}',
-          fit: BoxFit.cover,
-          alignment: Alignment(lerp(1, 0), 0),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFullItem(Event event) {
-    int index = events.indexOf(event);
+//TODO : filters
+  Widget _buildFilters() {
     return ExpandedEventItem(
-      topMargin: iconTopMargin(index),
-      leftMargin: iconLeftMargin(index),
+      topMargin: iconTopMargin(0),
+      leftMargin: iconLeftMargin(0),
       height: iconSize,
       isVisible: _controller.status == AnimationStatus.completed,
       borderRadius: itemBorderRadius,
-      title: event.title,
-      date: event.date,
+      searchController: searchController,
     );
   }
 
@@ -157,14 +134,61 @@ class _BottomNavState extends State<BottomNav>
   }
 }
 
+class SearchBarItem extends StatelessWidget {
+  final TextEditingController searchController;
+
+  const SearchBarItem({
+    Key key,
+    this.searchController,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: EdgeInsets.only(left: 2, bottom: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height / 100),
+            TextField(
+              autofocus: false,
+              controller: searchController,
+              style: TextStyle(color: Color(0xFF162A49)),
+              keyboardType: TextInputType.text,
+              onTap: () {},
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.height / 90,
+                    right: MediaQuery.of(context).size.height / 90),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide:
+                        BorderSide(color: Color(0xFF162A49), width: 1.0)),
+                labelStyle: TextStyle(color: Color(0xFF162A49)),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Color(0xFF162A49),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//TODO : enlever les attributs inutiles
 class ExpandedEventItem extends StatelessWidget {
   final double topMargin;
   final double leftMargin;
   final double height;
   final bool isVisible;
   final double borderRadius;
-  final String title;
-  final String date;
+  final TextEditingController searchController;
 
   const ExpandedEventItem(
       {Key key,
@@ -172,18 +196,18 @@ class ExpandedEventItem extends StatelessWidget {
       this.height,
       this.isVisible,
       this.borderRadius,
-      this.title,
-      this.date,
-      this.leftMargin})
+      this.leftMargin,
+      this.searchController})
       : super(key: key);
 
   @override
+  //TODO ajouter les filtres
   Widget build(BuildContext context) {
     return Positioned(
-      top: topMargin,
+      top: 120,
       left: leftMargin,
       right: 0,
-      height: height,
+      // height: 85,
       child: AnimatedOpacity(
         opacity: isVisible ? 1 : 0,
         duration: Duration(milliseconds: 200),
@@ -192,66 +216,23 @@ class ExpandedEventItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
             color: Colors.white,
           ),
-          padding: EdgeInsets.only(left: height).add(EdgeInsets.all(8)),
+          padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
           child: _buildContent(),
         ),
       ),
     );
   }
 
+//TODO : filters content
   Widget _buildContent() {
     return Column(
       children: <Widget>[
-        Text(title, style: TextStyle(fontSize: 16)),
-        SizedBox(height: 8),
-        Row(
-          children: <Widget>[
-            Text(
-              '1 ticket',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              date,
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-        Spacer(),
-        Row(
-          children: <Widget>[
-            Icon(Icons.place, color: Colors.grey.shade400, size: 16),
-            Text(
-              'Science Park 10 25A',
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-            )
-          ],
+        SearchBarItem(
+          searchController: searchController,
         )
       ],
     );
   }
-}
-
-final List<Event> events = [
-  Event('steve-johnson.jpeg', 'Shenzhen GLOBAL DESIGN AWARD 2018', '4.20-30'),
-  Event('efe-kurnaz.jpeg', 'Shenzhen GLOBAL DESIGN AWARD 2018', '4.20-30'),
-  Event('rodion-kutsaev.jpeg', 'Dawan District Guangdong Hong Kong', '4.28-31'),
-];
-
-class Event {
-  final String assetName;
-  final String title;
-  final String date;
-
-  Event(this.assetName, this.title, this.date);
 }
 
 class SheetHeader extends StatelessWidget {
@@ -270,7 +251,7 @@ class SheetHeader extends StatelessWidget {
         'Search with filters',
         style: TextStyle(
           color: Colors.white,
-          fontSize: fontSize,
+          fontSize: fontSize * 1.1,
           fontWeight: FontWeight.w500,
         ),
       ),

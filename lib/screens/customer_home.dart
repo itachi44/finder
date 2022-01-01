@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:finder/components/bottom_nav.dart';
 import 'package:finder/components/sliding_cards.dart';
 import 'package:finder/components/tabs.dart';
+import 'package:finder/screens/see_all.dart';
+import 'package:finder/screens/login.dart';
+
 import 'dart:io';
 
 class Header extends StatelessWidget {
@@ -14,11 +17,14 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Finder',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Finder',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           SizedBox(height: MediaQuery.of(context).size.height / 100),
@@ -37,7 +43,10 @@ class Header extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 )),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => LogInPage()));
+            },
           ),
         ],
       ),
@@ -70,7 +79,10 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               )),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => SeeAllPage()));
+          },
         ));
   }
 
@@ -102,9 +114,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               children: <Widget>[
                 SizedBox(height: 8),
                 Header(),
-                SizedBox(height: 40),
+                SizedBox(height: 20),
                 Tabs(),
-                SizedBox(height: 8),
+                SizedBox(height: 4),
                 SlidingCards(),
                 seeAll(),
               ],

@@ -36,13 +36,13 @@ class _SlidingCardsState extends State<SlidingCards> {
           SlidingCard(
             name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
             date: '4.20-30',
-            assetName: 'steve-johnson.jpeg',
+            assetName: 'onboarding1.jpeg',
             offset: pageOffset,
           ),
           SlidingCard(
             name: 'Dawan District, Guangdong Hong Kong and Macao',
             date: '4.28-31',
-            assetName: 'rodion-kutsaev.jpeg',
+            assetName: 'onboarding4.jpeg',
             offset: pageOffset - 1,
           ),
         ],
@@ -71,7 +71,7 @@ class SlidingCard extends StatelessWidget {
     return Transform.translate(
       offset: Offset(-32 * gauss * offset.sign, 0),
       child: Card(
-        margin: EdgeInsets.only(left: 8, right: 8, bottom: 24),
+        margin: EdgeInsets.only(left: 8, right: 8, bottom: 30),
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Column(

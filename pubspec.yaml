@@ -25,6 +25,8 @@ dependencies:
   mongo_dart: ^0.4.4
   flutter_dotenv: ^5.0.2
   animate_do: ^2.0.0
+  shimmer: ^2.0.0
+
 
   flutter:
     sdk: flutter
@@ -53,10 +55,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
-    - assets/images/efe-kurnaz.jpeg
-    - assets/images/rodion-kutsaev.jpeg
-    - assets/images/steve-johnson.jpeg
-    - assets/images/no-connection.gif
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
