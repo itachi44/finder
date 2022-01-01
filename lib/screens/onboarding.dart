@@ -28,23 +28,21 @@ class _OnboardingPageState extends State<OnboardingPage>
 
   List<dynamic> _appartements = [
     {
-      'title': 'Modern \nOnboardingPage',
-      'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image': 'assets/images/onboarding1.jpeg'
-    },
-    {
-      'title': 'Modern \nFurniture',
-      'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
-      'image': 'assets/images/onboarding2.jpeg'
-    },
-    {
-      'title': 'Modern \nFurniture',
-      'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
+      'title': 'Find the appartment of your dream',
+      'sub_title':
+          'No need to search from left to right, Finder is here for that.',
       'image': 'assets/images/onboarding3.jpeg'
     },
     {
-      'title': 'Modern \nFurniture',
-      'sub_title': 'Choose From Thousands Of Items That Fits Your Choice.',
+      'title': 'Find from anywhere',
+      'sub_title':
+          'Choose from hundreds of dwellings just in on click, every day, from any place.',
+      'image': 'assets/images/onboarding6.jpeg'
+    },
+    {
+      'title': 'Whatever your needs',
+      'sub_title':
+          'You can find apartments but also houses, which may be for rent or sale.',
       'image': 'assets/images/onboarding4.jpeg'
     }
   ];
