@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:finder/components/dialog.dart';
 
 const double minHeight = 80;
 const double iconStartSize = 44;
@@ -15,23 +16,16 @@ class BottomNav extends StatefulWidget {
   _BottomNavState createState() => _BottomNavState();
 }
 
-class _BottomNavState extends State<BottomNav>
-    with SingleTickerProviderStateMixin {
+class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
   AnimationController _controller;
 
   double get maxHeight => MediaQuery.of(context).size.height;
-
   double get headerTopMargin =>
       lerp(20, 20 + MediaQuery.of(context).padding.top);
-
   double get headerFontSize => lerp(14, 24);
-
   double get itemBorderRadius => lerp(8, 24);
-
   double get iconLeftBorderRadius => itemBorderRadius;
-
   double get iconRightBorderRadius => lerp(8, 0);
-
   double get iconSize => lerp(iconStartSize, iconEndSize);
 
   double iconTopMargin(int index) =>
@@ -41,7 +35,14 @@ class _BottomNavState extends State<BottomNav>
 
   double iconLeftMargin(int index) =>
       lerp(index * (iconsHorizontalSpacing + iconStartSize), 0);
+
   TextEditingController searchController = TextEditingController();
+  TextEditingController minSize = TextEditingController();
+  TextEditingController maxSize = TextEditingController();
+  TextEditingController minPrice = TextEditingController();
+  TextEditingController maxPrice = TextEditingController();
+  bool houseValue = false;
+  bool apartmentValue = false;
 
   @override
   void initState() {
@@ -61,6 +62,20 @@ class _BottomNavState extends State<BottomNav>
   double lerp(double min, double max) =>
       lerpDouble(min, max, _controller.value);
 
+  Widget _buildSheetHeader({double fontSize, double topMargin}) {
+    return Positioned(
+      top: topMargin,
+      child: Text(
+        'Search with filters',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: fontSize * 1.1,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -72,7 +87,7 @@ class _BottomNavState extends State<BottomNav>
           right: 0,
           bottom: 0,
           child: GestureDetector(
-            onTap: _toggle,
+            //onTap: _toggle,
             onVerticalDragUpdate: _handleDragUpdate,
             onVerticalDragEnd: _handleDragEnd,
             child: Container(
@@ -83,12 +98,30 @@ class _BottomNavState extends State<BottomNav>
               ),
               child: Stack(
                 children: <Widget>[
-                  MenuButton(),
-                  SheetHeader(
+                  Positioned(
+                    left: MediaQuery.of(context).size.width / 1.4,
+                    right: 0,
+                    bottom: 35,
+                    child: InkWell(
+                      onTap: _toggle,
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                  _buildSheetHeader(
                     fontSize: headerFontSize,
                     topMargin: headerTopMargin,
                   ),
-                  _buildFilters(),
+                  _buildExpandedEventItem(
+                    topMargin: iconTopMargin(0),
+                    leftMargin: iconLeftMargin(0),
+                    height: iconSize,
+                    isVisible: _controller.status == AnimationStatus.completed,
+                    borderRadius: itemBorderRadius,
+                  ),
                 ],
               ),
             ),
@@ -98,15 +131,365 @@ class _BottomNavState extends State<BottomNav>
     );
   }
 
-//TODO : filters
-  Widget _buildFilters() {
-    return ExpandedEventItem(
-      topMargin: iconTopMargin(0),
-      leftMargin: iconLeftMargin(0),
-      height: iconSize,
-      isVisible: _controller.status == AnimationStatus.completed,
-      borderRadius: itemBorderRadius,
-      searchController: searchController,
+  showSpinner(BuildContext context, dynamic content) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF162A49)),
+          ),
+          Container(
+              margin: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height / 179.2),
+              child: Text(content)),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Column(
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: EdgeInsets.only(left: 2, bottom: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height / 100),
+                TextField(
+                  textInputAction: TextInputAction.search,
+                  autofocus: false,
+                  controller: searchController,
+                  style: TextStyle(color: Color(0xFF162A49)),
+                  keyboardType: TextInputType.text,
+                  onSubmitted: (value) {
+                    var searchedValue = searchController.text;
+                    var minSizeValue = minSize.text;
+                    var maxSizeValue = maxSize.text;
+                    var minPriceValue = minPrice.text;
+                    var maxPriceValue = maxPrice.text;
+
+                    if (searchedValue == "") {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogBox(
+                              title: "No entry",
+                              description:
+                                  "Search either a city, a district or a description",
+                              btnText: "Close",
+                            );
+                          });
+                      //show dialog with no input message
+                    } else if (!RegExp(r'^[0-9]{0,}$').hasMatch(minSizeValue) ||
+                        !RegExp(r'^[0-9]{0,}$').hasMatch(maxSizeValue) ||
+                        !RegExp(r'^[0-9]{0,}$').hasMatch(minPriceValue) ||
+                        !RegExp(r'^[0-9]{0,}$').hasMatch(maxPriceValue)) {
+                      print("input error");
+                      //show error dialog
+                    } else {
+                      showSpinner(context, "Searching...");
+
+                      dynamic requestObject = {};
+                      if (minSizeValue != "") {
+                        requestObject["minSize"] = minSizeValue;
+                      } else {
+                        requestObject["minSize"] = 100;
+                      }
+                      if (maxSizeValue != "") {
+                        requestObject["maxSize"] = minSizeValue;
+                      } else {
+                        requestObject["maxSize"] = 10000;
+                      }
+                      if (minPriceValue != "") {
+                        requestObject["minPrice"] = minPriceValue;
+                      } else {
+                        requestObject["minPrice"] = 100;
+                      }
+                      if (maxPriceValue != "") {
+                        requestObject["maxPrice"] = maxPriceValue;
+                      } else {
+                        requestObject["maxPrice"] = 100000000;
+                      }
+
+                      //TODO faire appel au pipeline de recherche avec les valeurs de requestObject
+
+                      searchController.text = minSize.text =
+                          maxSize.text = minPrice.text = maxPrice.text = "";
+                      apartmentValue = false;
+                      houseValue = false;
+                      Navigator.pop(context);
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'City, district or description',
+                    contentPadding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.height / 90,
+                        right: MediaQuery.of(context).size.height / 90),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide:
+                            BorderSide(color: Color(0xFF162A49), width: 1.0)),
+                    labelStyle: TextStyle(color: Color(0xFF162A49)),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Color(0xFF162A49),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildFilterItem() {
+    return Column(
+      children: <Widget>[filterItem()],
+    );
+  }
+
+  Widget filterItem() {
+    return Container(
+        child: Column(
+      children: [
+        SizedBox(height: 5),
+        Text("Filters:",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            )),
+        SizedBox(height: 15),
+        Text("Category"),
+        Row(children: [
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Text("House"),
+                Checkbox(
+                  value: houseValue,
+                  onChanged: (bool value) {
+                    setState(() {
+                      apartmentValue = false;
+                      houseValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15),
+          Padding(
+            padding: EdgeInsets.only(left: 60),
+            child: Row(
+              children: [
+                Text("Apartment"),
+                Checkbox(
+                  value: apartmentValue,
+                  onChanged: (bool value) {
+                    setState(() {
+                      houseValue = false;
+                      apartmentValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ]),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height / 30,
+                    child: TextFormField(
+                      controller: minSize,
+                      keyboardType: TextInputType.number,
+                      onTap: () {},
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.height / 100,
+                              right: MediaQuery.of(context).size.height / 100),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 0.0)),
+                          labelStyle: TextStyle(color: Colors.grey),
+                          labelText: '100'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 12),
+              child: Text("< size <",
+                  style: TextStyle(
+                    color: Color(0xFF162A49),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  )),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height / 30,
+                    child: TextFormField(
+                      controller: maxSize,
+                      keyboardType: TextInputType.number,
+                      onTap: () {},
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.height / 100,
+                              right: MediaQuery.of(context).size.height / 100),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 0.0)),
+                          labelStyle: TextStyle(color: Colors.grey),
+                          labelText: '10000'),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height / 30,
+                    child: TextFormField(
+                      controller: minPrice,
+                      keyboardType: TextInputType.number,
+                      onTap: () {},
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.height / 100,
+                              right: MediaQuery.of(context).size.height / 100),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 0.0)),
+                          labelStyle: TextStyle(color: Colors.grey),
+                          labelText: '100'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 12),
+              child: Text("< price <",
+                  style: TextStyle(
+                    color: Color(0xFF162A49),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  )),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height / 30,
+                    child: TextFormField(
+                      controller: maxPrice,
+                      keyboardType: TextInputType.number,
+                      onTap: () {},
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.height / 100,
+                              right: MediaQuery.of(context).size.height / 100),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 0.0)),
+                          labelStyle: TextStyle(color: Colors.grey),
+                          labelText: '10000'),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildExpandedEventItem(
+      {double topMargin,
+      double leftMargin,
+      double height,
+      bool isVisible,
+      double borderRadius}) {
+    return Stack(
+      children: [
+        Positioned(
+          top: MediaQuery.of(context).size.height / 7,
+          left: leftMargin,
+          right: 0,
+          // height: 85,
+          child: AnimatedOpacity(
+            opacity: isVisible ? 1 : 0,
+            duration: Duration(milliseconds: 200),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              child: _buildSearchBar(),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 200,
+          left: leftMargin,
+          right: 0,
+          // height: 85,
+          child: AnimatedOpacity(
+            opacity: isVisible ? 1 : 0,
+            duration: Duration(milliseconds: 200),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              child: _buildFilterItem(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -131,145 +514,5 @@ class _BottomNavState extends State<BottomNav>
       _controller.fling(velocity: math.min(-2.0, -flingVelocity));
     else
       _controller.fling(velocity: _controller.value < 0.5 ? -2.0 : 2.0);
-  }
-}
-
-class SearchBarItem extends StatelessWidget {
-  final TextEditingController searchController;
-
-  const SearchBarItem({
-    Key key,
-    this.searchController,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: EdgeInsets.only(left: 2, bottom: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height / 100),
-            TextField(
-              autofocus: false,
-              controller: searchController,
-              style: TextStyle(color: Color(0xFF162A49)),
-              keyboardType: TextInputType.text,
-              onTap: () {},
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.height / 90,
-                    right: MediaQuery.of(context).size.height / 90),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide:
-                        BorderSide(color: Color(0xFF162A49), width: 1.0)),
-                labelStyle: TextStyle(color: Color(0xFF162A49)),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Color(0xFF162A49),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-//TODO : enlever les attributs inutiles
-class ExpandedEventItem extends StatelessWidget {
-  final double topMargin;
-  final double leftMargin;
-  final double height;
-  final bool isVisible;
-  final double borderRadius;
-  final TextEditingController searchController;
-
-  const ExpandedEventItem(
-      {Key key,
-      this.topMargin,
-      this.height,
-      this.isVisible,
-      this.borderRadius,
-      this.leftMargin,
-      this.searchController})
-      : super(key: key);
-
-  @override
-  //TODO ajouter les filtres
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 120,
-      left: leftMargin,
-      right: 0,
-      // height: 85,
-      child: AnimatedOpacity(
-        opacity: isVisible ? 1 : 0,
-        duration: Duration(milliseconds: 200),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            color: Colors.white,
-          ),
-          padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
-          child: _buildContent(),
-        ),
-      ),
-    );
-  }
-
-//TODO : filters content
-  Widget _buildContent() {
-    return Column(
-      children: <Widget>[
-        SearchBarItem(
-          searchController: searchController,
-        )
-      ],
-    );
-  }
-}
-
-class SheetHeader extends StatelessWidget {
-  final double fontSize;
-  final double topMargin;
-
-  const SheetHeader(
-      {Key key, @required this.fontSize, @required this.topMargin})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: topMargin,
-      child: Text(
-        'Search with filters',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: fontSize * 1.1,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-class MenuButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      right: 0,
-      bottom: 24,
-      child: Icon(
-        Icons.menu,
-        color: Colors.white,
-        size: 28,
-      ),
-    );
   }
 }

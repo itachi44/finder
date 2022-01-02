@@ -9,6 +9,8 @@ import 'package:finder/screens/login.dart';
 import 'dart:io';
 
 class Header extends StatelessWidget {
+  final dynamic db;
+  Header(this.db);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -45,7 +47,7 @@ class Header extends StatelessWidget {
                 )),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => LogInPage()));
+                  builder: (BuildContext context) => LogInPage(db: db)));
             },
           ),
         ],
@@ -55,7 +57,9 @@ class Header extends StatelessWidget {
 }
 
 class CustomerHomePage extends StatefulWidget {
-  CustomerHomePage({Key key}) : super(key: key);
+  final dynamic db;
+
+  CustomerHomePage({Key key, this.db}) : super(key: key);
 
   @override
   _CustomerHomePageState createState() => _CustomerHomePageState();
@@ -104,26 +108,35 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 8),
-                Header(),
-                SizedBox(height: 20),
-                Tabs(),
-                SizedBox(height: 4),
-                SlidingCards(),
-                seeAll(),
-              ],
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: <Widget>[
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 8),
+                  Header(widget.db),
+                  SizedBox(height: 20),
+                  Tabs(),
+                  SizedBox(height: 4),
+                  SlidingCards(),
+                  seeAll(),
+                ],
+              ),
             ),
-          ),
-          BottomNav(), //use this or ScrollableExhibitionSheet
-        ],
+            BottomNav(), //use this or ScrollableExhibitionSheet
+          ],
+        ),
       ),
     );
   }

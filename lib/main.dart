@@ -12,11 +12,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //tester la connectivité
   var isConnected = false;
+  dynamic db;
   try {
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       isConnected = true;
-      await MongoDatabase.connect();
+      db = await MongoDatabase.connect();
     }
   } on SocketException catch (_) {
     isConnected = false;
@@ -30,7 +31,9 @@ Future<void> main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: firstTime == true && isConnected == true
-        ? CustomerHomePage()
+        ? CustomerHomePage(
+            db: db,
+          )
         : firstTime == null && isConnected == true
             ? OnboardingPage()
             : ErrorPage(),

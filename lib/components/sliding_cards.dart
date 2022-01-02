@@ -34,14 +34,16 @@ class _SlidingCardsState extends State<SlidingCards> {
         controller: pageController,
         children: <Widget>[
           SlidingCard(
-            name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
-            date: '4.20-30',
+            title: 'Un magnifique appartement près de la mer.',
+            date: '31-12-2021',
+            price: '300 \$',
             assetName: 'onboarding1.jpeg',
             offset: pageOffset,
           ),
           SlidingCard(
-            name: 'Dawan District, Guangdong Hong Kong and Macao',
-            date: '4.28-31',
+            title: 'Une maison bien placée dans le centre ville.',
+            date: '01-01-2022',
+            price: '3500 \$',
             assetName: 'onboarding4.jpeg',
             offset: pageOffset - 1,
           ),
@@ -52,15 +54,18 @@ class _SlidingCardsState extends State<SlidingCards> {
 }
 
 class SlidingCard extends StatelessWidget {
-  final String name;
+  final String title;
   final String date;
+  final String price;
+
   final String assetName;
   final double offset;
 
   const SlidingCard({
     Key key,
-    @required this.name,
+    @required this.title,
     @required this.date,
+    @required this.price,
     @required this.assetName,
     @required this.offset,
   }) : super(key: key);
@@ -88,8 +93,9 @@ class SlidingCard extends StatelessWidget {
             SizedBox(height: 8),
             Expanded(
               child: CardContent(
-                name: name,
+                title: title,
                 date: date,
+                price: price,
                 offset: gauss,
               ),
             ),
@@ -101,14 +107,16 @@ class SlidingCard extends StatelessWidget {
 }
 
 class CardContent extends StatelessWidget {
-  final String name;
+  final String title;
   final String date;
+  final String price;
   final double offset;
 
   const CardContent(
       {Key key,
-      @required this.name,
+      @required this.title,
       @required this.date,
+      @required this.price,
       @required this.offset})
       : super(key: key);
 
@@ -121,7 +129,7 @@ class CardContent extends StatelessWidget {
         children: <Widget>[
           Transform.translate(
             offset: Offset(8 * offset, 0),
-            child: Text(name, style: TextStyle(fontSize: 20)),
+            child: Text(title, style: TextStyle(fontSize: 20)),
           ),
           SizedBox(height: 8),
           Transform.translate(
@@ -161,7 +169,7 @@ class CardContent extends StatelessWidget {
               Transform.translate(
                 offset: Offset(32 * offset, 0),
                 child: Text(
-                  '0.00 \$',
+                  price,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
