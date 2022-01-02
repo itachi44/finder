@@ -190,13 +190,21 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                               btnText: "Close",
                             );
                           });
-                      //show dialog with no input message
                     } else if (!RegExp(r'^[0-9]{0,}$').hasMatch(minSizeValue) ||
                         !RegExp(r'^[0-9]{0,}$').hasMatch(maxSizeValue) ||
                         !RegExp(r'^[0-9]{0,}$').hasMatch(minPriceValue) ||
                         !RegExp(r'^[0-9]{0,}$').hasMatch(maxPriceValue)) {
                       print("input error");
-                      //show error dialog
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogBox(
+                              title: "Input error",
+                              description:
+                                  "please enter correct values for the filters.",
+                              btnText: "Close",
+                            );
+                          });
                     } else {
                       showSpinner(context, "Searching...");
 
@@ -222,7 +230,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                         requestObject["maxPrice"] = 100000000;
                       }
 
-                      //TODO faire appel au pipeline de recherche avec les valeurs de requestObject
+                      //TODO faire appel au pipeline de Atlas search
 
                       searchController.text = minSize.text =
                           maxSize.text = minPrice.text = maxPrice.text = "";
