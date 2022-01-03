@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:finder/screens/customer_home.dart';
+import 'package:finder/screens/login.dart';
+
 import 'dart:io';
 
 class ErrorPage extends StatefulWidget {
-  const ErrorPage({Key key}) : super(key: key);
+  final dynamic pageToGo;
+
+  const ErrorPage({Key key, this.pageToGo = "/"}) : super(key: key);
 
   @override
   _ErrorPageState createState() => _ErrorPageState();
 }
 
 class _ErrorPageState extends State<ErrorPage> {
+  _getPage(dynamic page) {
+    switch (page) {
+      case "/customerHome":
+        return (context) => CustomerHomePage();
+        break;
+      case "/logIn":
+        return (context) => LogInPage();
+      default:
+        return (context) => CustomerHomePage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,9 +75,10 @@ class _ErrorPageState extends State<ErrorPage> {
                       final result = await InternetAddress.lookup('google.com');
                       if (result.isNotEmpty &&
                           result[0].rawAddress.isNotEmpty) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                CustomerHomePage()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: _getPage(widget.pageToGo)));
                       }
                     } on SocketException catch (_) {}
                   },

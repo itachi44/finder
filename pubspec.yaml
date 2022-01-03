@@ -26,6 +26,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   animate_do: ^2.0.0
   shimmer: ^2.0.0
+  iconsax: ^0.0.8
+
 
 
   flutter:

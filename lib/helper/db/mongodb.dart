@@ -19,7 +19,7 @@ class MongoDatabase {
   }
 
   //connexion
-  static Future handleConnection(userData, db) async {
+  static Future handleConnection(providerData, db) async {
     var providerCollection = db.collection("finderApp_provider");
 
     try {
@@ -30,11 +30,12 @@ class MongoDatabase {
               foreignField: 'id',
               as: 'account'))
           .addStage(Unwind(Field('account')))
+          .addStage(Match(Or([
+            {"account.username": providerData["identifier"]},
+            {"email": providerData["identifier"]}
+          ])))
           .addStage(Match(where
-              .eq('account.username', userData["username"])
-              .map['\$query']))
-          .addStage(Match(where
-              .eq('account.password', userData["password"])
+              .eq('account.password', providerData["password"])
               .map['\$query']))
           .build();
 

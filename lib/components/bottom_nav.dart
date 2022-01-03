@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:finder/components/dialog.dart';
+import 'package:finder/screens/search_result.dart';
 
 const double minHeight = 80;
 const double iconStartSize = 44;
@@ -237,6 +238,9 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       apartmentValue = false;
                       houseValue = false;
                       Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SearchResultPage()));
                     }
                   },
                   decoration: InputDecoration(

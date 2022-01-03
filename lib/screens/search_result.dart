@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:finder/components/loading.dart';
 
-class ScrollablePostView extends StatefulWidget {
+class SearchResultPage extends StatefulWidget {
+  final dynamic searchResult;
+  SearchResultPage({Key key, this.searchResult}) : super(key: key);
+
   @override
-  _ScrollablePostViewState createState() => _ScrollablePostViewState();
+  _SearchResultPageState createState() => _SearchResultPageState();
 }
 
-//TODO: Add search bar on the top
-//TODO : show loading view until data is fetching
-class _ScrollablePostViewState extends State<ScrollablePostView> {
-  Widget _buildContent(
+class _SearchResultPageState extends State<SearchResultPage> {
+  dynamic searchResultList;
+  @override
+  void initState() {
+    super.initState();
+    searchResultList = widget.searchResult;
+  }
+
+  Widget resultCard(
       {String img, String title, String date, String price, String location}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -44,6 +51,7 @@ class _ScrollablePostViewState extends State<ScrollablePostView> {
                     width: 250,
                     child: Text("Un magnifique appartement près de la mer",
                         textAlign: TextAlign.center,
+                        //overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 16)),
                   ),
                 ),
@@ -82,6 +90,7 @@ class _ScrollablePostViewState extends State<ScrollablePostView> {
                       Expanded(
                         child: Text(
                           'Dakar, Plateau Avenue Lamine Gueye',
+                          overflow: TextOverflow.ellipsis,
                           style:
                               TextStyle(color: Color(0xFF162A49), fontSize: 13),
                         ),
@@ -97,8 +106,39 @@ class _ScrollablePostViewState extends State<ScrollablePostView> {
     );
   }
 
+  Widget _buildResult() {
+    return Column(
+      children: [
+        for (var result in searchResultList)
+          resultCard(
+              img: result["img"],
+              title: result["title"],
+              date: result["date"],
+              price: result["price"],
+              location: result["location"])
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: _buildContent()));
+    return SafeArea(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Results",
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color(0xFF162A49),
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: resultCard(),
+    ));
   }
 }
