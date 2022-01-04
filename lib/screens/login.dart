@@ -112,7 +112,7 @@ class _LogInPageState extends State<LogInPage> {
                       curve: Curves.linear,
                       child: Image.network(
                         'https://ouch-cdn2.icons8.com/As6ct-Fovab32SIyMatjsqIaIjM9Jg1PblII8YAtBtQ/rs:fit:784:784/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvNTg4/LzNmMDU5Mzc0LTky/OTQtNDk5MC1hZGY2/LTA2YTkyMDZhNWZl/NC5zdmc.png',
-                        height: 400,
+                        height: MediaQuery.of(context).size.height / 2,
                       ),
                     ),
                   ),
