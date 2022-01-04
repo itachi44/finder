@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:finder/components/dialog.dart';
 import 'package:finder/screens/search_result.dart';
+import 'package:finder/helper/db/mongodb.dart';
 
 const double minHeight = 80;
 const double iconStartSize = 44;
@@ -13,6 +14,9 @@ const double iconsVerticalSpacing = 24;
 const double iconsHorizontalSpacing = 16;
 
 class BottomNav extends StatefulWidget {
+  final dynamic db;
+
+  BottomNav({Key key, this.db}) : super(key: key);
   @override
   _BottomNavState createState() => _BottomNavState();
 }
@@ -44,6 +48,12 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
   TextEditingController maxPrice = TextEditingController();
   bool houseValue = false;
   bool apartmentValue = false;
+
+  dynamic makeAsearch(requestObject) async {
+    var result = await MongoDatabase.search(requestObject, widget.db);
+
+    return result;
+  }
 
   @override
   void initState() {
@@ -173,7 +183,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                   controller: searchController,
                   style: TextStyle(color: Color(0xFF162A49)),
                   keyboardType: TextInputType.text,
-                  onSubmitted: (value) {
+                  onSubmitted: (value) async {
                     var searchedValue = searchController.text;
                     var minSizeValue = minSize.text;
                     var maxSizeValue = maxSize.text;
@@ -210,13 +220,14 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       showSpinner(context, "Searching...");
 
                       dynamic requestObject = {};
+                      requestObject["searchedValue"] = searchedValue;
                       if (minSizeValue != "") {
                         requestObject["minSize"] = minSizeValue;
                       } else {
                         requestObject["minSize"] = 100;
                       }
                       if (maxSizeValue != "") {
-                        requestObject["maxSize"] = minSizeValue;
+                        requestObject["maxSize"] = maxSizeValue;
                       } else {
                         requestObject["maxSize"] = 10000;
                       }
@@ -228,19 +239,24 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       if (maxPriceValue != "") {
                         requestObject["maxPrice"] = maxPriceValue;
                       } else {
-                        requestObject["maxPrice"] = 100000000;
+                        requestObject["maxPrice"] = 999999999999;
                       }
-
-                      //TODO faire appel au pipeline de Atlas search
-
+                      if (houseValue == true) {
+                        requestObject["category"] = "house";
+                      } else if (apartmentValue == true) {
+                        requestObject["category"] = "apartment";
+                      } else {
+                        requestObject["category"] = "";
+                      }
+                      dynamic resultList = await makeAsearch(requestObject);
                       searchController.text = minSize.text =
                           maxSize.text = minPrice.text = maxPrice.text = "";
                       apartmentValue = false;
                       houseValue = false;
-                      Navigator.pop(context);
+                      Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              SearchResultPage()));
+                              SearchResultPage(searchResult: resultList)));
                     }
                   },
                   decoration: InputDecoration(

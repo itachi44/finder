@@ -47,4 +47,74 @@ class MongoDatabase {
       return Future.value(e);
     }
   }
+
+  //search
+  static Future search(data, db) async {
+    var postCollection = db.collection("finderApp_post");
+    print(data["minSize"].toString());
+    int minSize = int.parse(data["minSize"].toString());
+    int maxSize = int.parse(data["maxSize"].toString());
+    int minPrice = int.parse(data["minPrice"].toString());
+    int maxPrice = int.parse(data["maxPrice"].toString());
+
+    try {
+      dynamic pipeline = [
+        //1- search
+        {
+          '\$search': {
+            'index': 'postSearchIndex',
+            'text': {
+              'query': data["searchedValue"],
+              'path': {'wildcard': '*'}
+            }
+          }
+        },
+        // 2- Match
+        data["category"] == ""
+            ? {
+                '\$match': {
+                  "size": {'\$gte': minSize, '\$lte': maxSize},
+                  "price": {'\$gte': minPrice, '\$lte': maxPrice}
+                }
+              }
+            : {
+                "\$match": {
+                  "category": data["category"],
+                  "size": {"\$gte": minSize, "\$lte": maxSize},
+                  "price": {"\$gte": minPrice, "\$lte": maxPrice}
+                }
+              },
+        //lookup
+
+        {
+          '\$lookup': {
+            'from': 'finderApp_picture',
+            'let': {'pictures': '\$pictures'},
+            'pipeline': [
+              {
+                '\$match': {
+                  "pictures": {
+                    "exists": true
+                  }, //check if pictures before doing lookup
+                  '\$expr': {
+                    '\$in': ['\$id', "\$\$pictures"]
+                  }
+                }
+              },
+              {
+                '\$project': {'_id': 0}
+              }
+            ],
+            'as': 'pictures'
+          }
+        }
+      ];
+      print(pipeline);
+      final result = await postCollection.aggregateToStream(pipeline).toList();
+      return result;
+    } catch (e) {
+      print(e);
+      return Future.value(e);
+    }
+  }
 }

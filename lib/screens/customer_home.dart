@@ -134,7 +134,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 ],
               ),
             ),
-            BottomNav(), //use this or ScrollableExhibitionSheet
+            BottomNav(db: widget.db), //use this or ScrollableExhibitionSheet
           ],
         ),
       ),
