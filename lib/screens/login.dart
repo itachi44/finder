@@ -27,12 +27,14 @@ class _LogInPageState extends State<LogInPage> {
 
     var result = await MongoDatabase.handleConnection(providerData, widget.db);
     if (result.length == 1) {
-      print("we can go to provider page");
       prefs.setBool("isProviderAuthenticated", true);
       prefs.setString("providerUsername", result[0]["account"]["username"]);
       Navigator.of(context).pop();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => ProviderHomePage()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ProviderHomePage(db: widget.db)),
+          (Route<dynamic> route) => false);
     } else {
       print("we should show an error message");
       Navigator.of(context).pop();
@@ -280,9 +282,11 @@ class _LogInPageState extends State<LogInPage> {
                       }
                     }
                   } on SocketException catch (_) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ErrorPage(pageToGo: "/logIn")));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ErrorPage(pageToGo: "/logIn")),
+                        (Route<dynamic> route) => false);
                   }
                 },
                 height: 45,

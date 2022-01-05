@@ -5,6 +5,8 @@ import 'package:finder/screens/onboarding.dart';
 import 'package:finder/screens/customer_home.dart';
 import 'package:finder/screens/error_page.dart';
 import 'package:finder/helper/db/mongodb.dart';
+import 'package:finder/screens/provider_home.dart';
+
 import 'dart:io';
 
 Future<void> main() async {
@@ -14,7 +16,7 @@ Future<void> main() async {
   var isConnected = false;
   dynamic db;
   try {
-    final result = await InternetAddress.lookup('google.com');
+    final result = await InternetAddress.lookup('www.google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       isConnected = true;
       db = await MongoDatabase.connect();
@@ -26,20 +28,36 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  var firstTime = preferences.getBool("firstTime");
+  var isFirstTime = preferences.getBool("isFirstTime");
+  var isProviderAuthenticated = preferences.getBool("isProviderAuthenticated");
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: firstTime == true && isConnected == true
+    home: isFirstTime == false &&
+            isConnected == true &&
+            isProviderAuthenticated == null
         ? CustomerHomePage(
             db: db,
           )
-        : firstTime == null && isConnected == true
-            ? OnboardingPage()
-            : ErrorPage(),
+        : isFirstTime == null && isConnected == true
+            ? OnboardingPage(
+                db: db,
+              )
+            : isFirstTime == false &&
+                    isConnected == true &&
+                    isProviderAuthenticated == true
+                ? ProviderHomePage(
+                    db: db,
+                  )
+                : isConnected == false
+                    ? ErrorPage(
+                        db: db,
+                      )
+                    : null,
     routes: {
       '/Onboarding': (context) => OnboardingPage(),
       '/CustomerHomePage': (context) => CustomerHomePage(),
+      '/ProviderHomePage': (context) => ProviderHomePage(),
       '/ErrorPage': (context) => ErrorPage()
     },
   ));

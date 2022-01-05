@@ -4,7 +4,8 @@ import 'package:finder/screens/customer_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({Key key}) : super(key: key);
+  final dynamic db;
+  const OnboardingPage({Key key, this.db}) : super(key: key);
 
   @override
   _OnboardingPageState createState() => _OnboardingPageState();
@@ -82,7 +83,8 @@ class _OnboardingPageState extends State<OnboardingPage>
                 Positioned(
                   bottom: 0,
                   child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height / 40.6),
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       decoration: BoxDecoration(
@@ -104,12 +106,14 @@ class _OnboardingPageState extends State<OnboardingPage>
                                 _appartements[index]['title'],
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 42,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height /
+                                            19.5,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: MediaQuery.of(context).size.height / 81,
                             ),
                             FadeInDown(
                                 delay: Duration(milliseconds: 100),
@@ -118,11 +122,12 @@ class _OnboardingPageState extends State<OnboardingPage>
                                   _appartements[index]['sub_title'],
                                   style: TextStyle(
                                     color: Colors.grey.shade400,
-                                    fontSize: 18,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height / 45,
                                   ),
                                 )),
                             SizedBox(
-                              height: 50,
+                              height: MediaQuery.of(context).size.height / 16,
                             ),
                             FadeInLeft(
                               delay: Duration(milliseconds: 100),
@@ -136,17 +141,32 @@ class _OnboardingPageState extends State<OnboardingPage>
                                     onPressed: () async {
                                       SharedPreferences pref =
                                           await SharedPreferences.getInstance();
-                                      pref.setBool("firstTime", true);
+                                      pref.setBool("isFirstTime", false);
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (BuildContext context) =>
-                                                  CustomerHomePage()));
+                                                  CustomerHomePage(
+                                                    db: widget.db,
+                                                  )));
                                     },
                                     color: Colors.orange,
                                     padding: EdgeInsets.only(
-                                        right: 5, left: 30, top: 5, bottom: 5),
+                                        right:
+                                            MediaQuery.of(context).size.width /
+                                                75,
+                                        left:
+                                            MediaQuery.of(context).size.width /
+                                                12.5,
+                                        top:
+                                            MediaQuery.of(context).size.height /
+                                                162,
+                                        bottom:
+                                            MediaQuery.of(context).size.height /
+                                                162),
                                     child: Container(
-                                      height: 40,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
                                       width: MediaQuery.of(context).size.width *
                                           0.4,
                                       child: Row(
@@ -155,12 +175,19 @@ class _OnboardingPageState extends State<OnboardingPage>
                                             'Get Started',
                                             style: TextStyle(
                                               color: Colors.orange.shade50,
-                                              fontSize: 16,
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  50,
                                             ),
                                           ),
                                           Spacer(),
                                           Container(
-                                              padding: EdgeInsets.all(8),
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      100),
                                               decoration: BoxDecoration(
                                                   color: Colors.orange.shade300,
                                                   borderRadius:
@@ -175,7 +202,9 @@ class _OnboardingPageState extends State<OnboardingPage>
                                     )),
                               ),
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height / 16),
                           ])),
                 )
               ],

@@ -5,9 +5,10 @@ import 'package:finder/screens/login.dart';
 import 'dart:io';
 
 class ErrorPage extends StatefulWidget {
+  final dynamic db;
   final dynamic pageToGo;
 
-  const ErrorPage({Key key, this.pageToGo = "/"}) : super(key: key);
+  const ErrorPage({Key key, this.pageToGo = "/", this.db}) : super(key: key);
 
   @override
   _ErrorPageState createState() => _ErrorPageState();
@@ -17,12 +18,12 @@ class _ErrorPageState extends State<ErrorPage> {
   _getPage(dynamic page) {
     switch (page) {
       case "/customerHome":
-        return (context) => CustomerHomePage();
+        return (context) => CustomerHomePage(db: widget.db);
         break;
       case "/logIn":
-        return (context) => LogInPage();
+        return (context) => LogInPage(db: widget.db);
       default:
-        return (context) => CustomerHomePage();
+        return (context) => CustomerHomePage(db: widget.db);
     }
   }
 
