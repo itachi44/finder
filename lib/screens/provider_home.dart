@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:finder/components/dialog.dart';
 import 'package:finder/screens/search_result.dart';
+import 'package:finder/screens/create_post.dart';
+import 'package:finder/screens/manage_posts.dart';
 
 class ProviderHomePage extends StatefulWidget {
   final dynamic db;
@@ -441,7 +443,16 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
       duration: const Duration(seconds: 500),
       curve: Curves.easeIn,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if (page == "NewPost") {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => NewPostPage(db: widget.db)));
+          } else if (page == "ManagePost") {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    ManagePostsPage(db: widget.db)));
+          }
+        },
         child: Container(
             height: h,
             width: w,
