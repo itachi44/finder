@@ -11,6 +11,7 @@ On the other hand we have the client part where the client can come and make a s
 ## installation 
 
 ### 1. you should install flutter, see the link below : this project was built using flutter version 2.0.0 with dart 2.12
+##### https://docs.flutter.dev/get-started/install
 
 ### 2. You should have an simulator (The one provided by Xcode for example)
 
