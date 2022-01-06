@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Tabs extends StatelessWidget {
+  final String value;
+  Tabs(this.value);
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         SizedBox(width: 24),
-        MyTab(text: 'Recent', isSelected: true)
+        MyTab(text: value, isSelected: true)
       ],
     );
   }

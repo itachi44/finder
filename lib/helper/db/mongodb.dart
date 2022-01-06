@@ -117,4 +117,62 @@ class MongoDatabase {
       return Future.value(e);
     }
   }
+
+  //get latest posts
+  static Future getLatestPosts(provider, db) async {
+    var postCollection = db.collection("finderApp_post");
+    var providerCollection = db.collection("finderApp_provider");
+
+    try {
+      dynamic pipeline1 = AggregationPipelineBuilder()
+          .addStage(Lookup(
+              from: 'finderApp_account',
+              localField: 'account_id',
+              foreignField: 'id',
+              as: 'account'))
+          .addStage(Unwind(Field('account')))
+          .addStage(Match(Or([
+            {"account.username": provider},
+            {"email": provider}
+          ])))
+          .build();
+
+      final providerInfos =
+          await providerCollection.aggregateToStream(pipeline1).toList();
+      int idProvider = providerInfos[0]["id"];
+      dynamic pipeline2 = [
+        {
+          '\$match': {'provider_id': idProvider}
+        },
+        {
+          '\$sort': {'date': -1}
+        },
+        {
+          '\$lookup': {
+            'from': 'finderApp_picture',
+            'let': {'pictures': '\$pictures'},
+            'pipeline': [
+              {
+                '\$match': {
+                  "pictures": {"exists": true},
+                  '\$expr': {
+                    '\$in': ['\$id', "\$\$pictures"]
+                  }
+                }
+              },
+              {
+                '\$project': {'_id': 0}
+              }
+            ],
+            'as': 'pictures'
+          }
+        }
+      ];
+      final posts = await postCollection.aggregateToStream(pipeline2).toList();
+      return posts;
+    } catch (e) {
+      print(e);
+      return Future.value(e);
+    }
+  }
 }

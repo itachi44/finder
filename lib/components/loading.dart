@@ -14,7 +14,7 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          "Loading publications...",
+          "Loading posts...",
           style: TextStyle(color: Colors.black),
         ),
       ),

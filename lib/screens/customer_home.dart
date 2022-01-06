@@ -127,7 +127,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                   SizedBox(height: 8),
                   Header(widget.db),
                   SizedBox(height: 20),
-                  Tabs(),
+                  Tabs("Recents"),
                   SizedBox(height: 4),
                   SlidingCards(),
                   seeAll(),
