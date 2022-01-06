@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 
 class MongoDatabase {
   static var db, userCollection;
@@ -170,6 +171,63 @@ class MongoDatabase {
       ];
       final posts = await postCollection.aggregateToStream(pipeline2).toList();
       return posts;
+    } catch (e) {
+      print(e);
+      return Future.value(e);
+    }
+  }
+
+  static Future providerSearch(data, db) async {
+    var postCollection = db.collection("finderApp_post");
+
+    try {
+      dynamic pipeline = [
+        {
+          '\$search': {
+            'index': 'postSearchIndex',
+            'text': {
+              'query': data["searchedValue"],
+              'path': {'wildcard': '*'}
+            }
+          }
+        }
+      ];
+      if (data["startDate"] != null && data["endDate"] != null) {
+        dynamic startDate = DateFormat("yyyy-MM-dd").parse(data["startDate"]);
+        dynamic endDate = DateFormat("yyyy-MM-dd").parse(data["endDate"]);
+        print(startDate);
+        print(startDate.runtimeType);
+
+        pipeline.add({
+          '\$match': {
+            "date": {'\$gte': startDate, '\$lte': endDate},
+          }
+        });
+      }
+
+      pipeline.add({
+        '\$lookup': {
+          'from': 'finderApp_picture',
+          'let': {'pictures': '\$pictures'},
+          'pipeline': [
+            {
+              '\$match': {
+                "pictures": {"exists": true},
+                '\$expr': {
+                  '\$in': ['\$id', "\$\$pictures"]
+                }
+              }
+            },
+            {
+              '\$project': {'_id': 0}
+            }
+          ],
+          'as': 'pictures'
+        }
+      });
+
+      final result = await postCollection.aggregateToStream(pipeline).toList();
+      return result;
     } catch (e) {
       print(e);
       return Future.value(e);

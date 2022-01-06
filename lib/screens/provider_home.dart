@@ -2,11 +2,11 @@ import 'package:finder/helper/db/mongodb.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/components/nav_drawer.dart';
 import 'package:finder/components/tabs.dart';
-import 'package:finder/components/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:finder/components/dialog.dart';
 
 class ProviderHomePage extends StatefulWidget {
   final dynamic db;
@@ -25,6 +25,8 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   dynamic provider;
   TextEditingController filterStartDate = TextEditingController();
   TextEditingController filterEndDate = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+
   dynamic filterQuery = {};
 
   void loadLatestPosts() async {
@@ -38,6 +40,29 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
     super.initState();
     filterStartDate.text = "";
     loadLatestPosts();
+  }
+
+  showSpinner(BuildContext context, dynamic content) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF162A49)),
+          ),
+          Container(
+              margin: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height / 179.2),
+              child: Text(content)),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Widget _buildHeader() {
@@ -73,15 +98,39 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                     color: Color.fromRGBO(244, 243, 243, 1),
                     borderRadius: BorderRadius.circular(15)),
                 child: TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.black87,
-                      ),
-                      hintText: "Search you're looking for",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15)),
-                ),
+                    controller: searchController,
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.black87,
+                        ),
+                        hintText: "Search you're looking for",
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 15)),
+                    onSubmitted: (value) async {
+                      var searchedValue = searchController.text;
+                      if (searchedValue == "") {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialogBox(
+                                title: "No entry",
+                                description:
+                                    "Search either a city, a district or a description",
+                                btnText: "Close",
+                              );
+                            });
+                      } else {
+                        showSpinner(context, "Searching...");
+                        filterQuery["searchedValue"] = searchedValue;
+                        dynamic result = await MongoDatabase.providerSearch(
+                            filterQuery, widget.db);
+                        searchController.text = "";
+                        print(result);
+                        Navigator.of(context).pop();
+                      }
+                    }),
               ),
               IconButton(
                 icon: Icon(Icons.tune,
@@ -263,12 +312,12 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                             if (filterStartDate.text != "") {
                               filterQuery["startDate"] = filterStartDate.text;
                             } else {
-                              filterQuery["startDate"] = "";
+                              filterQuery["startDate"] = null;
                             }
                             if (filterEndDate.text != "") {
                               filterQuery["endDate"] = filterEndDate.text;
                             } else {
-                              filterQuery["endDate"] = "";
+                              filterQuery["endDate"] = null;
                             }
                             print(filterQuery);
                             Navigator.of(context).pop();
