@@ -7,6 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:finder/components/dialog.dart';
+import 'package:finder/screens/search_result.dart';
 
 class ProviderHomePage extends StatefulWidget {
   final dynamic db;
@@ -26,7 +27,6 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   TextEditingController filterStartDate = TextEditingController();
   TextEditingController filterEndDate = TextEditingController();
   TextEditingController searchController = TextEditingController();
-
   dynamic filterQuery = {};
 
   void loadLatestPosts() async {
@@ -129,6 +129,9 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                         searchController.text = "";
                         print(result);
                         Navigator.of(context).pop();
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SearchResultPage(searchResult: result)));
                       }
                     }),
               ),
@@ -309,18 +312,41 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                     children: [
                       TextButton(
                           onPressed: () {
-                            if (filterStartDate.text != "") {
-                              filterQuery["startDate"] = filterStartDate.text;
+                            if ((filterStartDate.text.isNotEmpty &&
+                                    filterEndDate.text.isEmpty) ||
+                                (filterStartDate.text.isEmpty &&
+                                    filterEndDate.text.isNotEmpty)) {
+                              Navigator.of(context).pop();
+
+                              print("Be sure to enter the start and end date");
+                            } else if (filterStartDate.text.isNotEmpty &&
+                                filterEndDate.text.isNotEmpty) {
+                              if (DateFormat("yyyy-MM-dd")
+                                  .parse(filterStartDate.text)
+                                  .isBefore(DateFormat("yyyy-MM-dd")
+                                      .parse(filterEndDate.text))) {
+                                Navigator.of(context).pop();
+
+                                print(
+                                    "Start date must be lower than the end date");
+                              }
                             } else {
-                              filterQuery["startDate"] = null;
+                              if (filterStartDate.text != "") {
+                                filterQuery["startDate"] = filterStartDate.text;
+                              } else {
+                                filterQuery["startDate"] = null;
+                              }
+                              if (filterEndDate.text != "") {
+                                filterQuery["endDate"] = filterEndDate.text;
+                              } else {
+                                filterQuery["endDate"] = null;
+                              }
+                              print(filterQuery);
+                              searchController.text = "";
+                              filterEndDate.text = "";
+                              filterStartDate.text = "";
+                              Navigator.of(context).pop();
                             }
-                            if (filterEndDate.text != "") {
-                              filterQuery["endDate"] = filterEndDate.text;
-                            } else {
-                              filterQuery["endDate"] = null;
-                            }
-                            print(filterQuery);
-                            Navigator.of(context).pop();
                           },
                           child: Text(
                             "Apply",
