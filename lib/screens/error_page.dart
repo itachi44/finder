@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:finder/screens/customer_home.dart';
 import 'package:finder/screens/login.dart';
-
+import 'package:finder/helper/db/mongodb.dart';
 import 'dart:io';
 
 class ErrorPage extends StatefulWidget {
   final dynamic db;
   final dynamic pageToGo;
 
-  const ErrorPage({Key key, this.pageToGo = "/", this.db}) : super(key: key);
+  const ErrorPage({Key key, this.pageToGo = "/customerHome", this.db})
+      : super(key: key);
 
   @override
   _ErrorPageState createState() => _ErrorPageState();
 }
 
 class _ErrorPageState extends State<ErrorPage> {
-  _getPage(dynamic page) {
-    switch (page) {
-      case "/customerHome":
-        return (context) => CustomerHomePage(db: widget.db);
-        break;
-      case "/logIn":
-        return (context) => LogInPage(db: widget.db);
-      default:
-        return (context) => CustomerHomePage(db: widget.db);
-    }
+  showSpinner(BuildContext context, dynamic content) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF162A49)),
+          ),
+          Container(
+              margin: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height / 179.2),
+              child: Text(content)),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -76,10 +88,22 @@ class _ErrorPageState extends State<ErrorPage> {
                       final result = await InternetAddress.lookup('google.com');
                       if (result.isNotEmpty &&
                           result[0].rawAddress.isNotEmpty) {
+                        dynamic db;
+                        if (widget.pageToGo == "/") {
+                          showSpinner(context, "please wait...");
+                          db = await MongoDatabase.connect();
+                          Navigator.of(context).pop();
+                        }
+
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: _getPage(widget.pageToGo)));
+                                builder: (context) =>
+                                    widget.pageToGo == "/customerHome"
+                                        ? CustomerHomePage(db: db)
+                                        : widget.pageToGo == "/logIn"
+                                            ? LogInPage(db: db)
+                                            : CustomerHomePage(db: db)));
                       }
                     } on SocketException catch (_) {}
                   },

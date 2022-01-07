@@ -10,6 +10,9 @@ import 'package:finder/components/dialog.dart';
 import 'package:finder/screens/search_result.dart';
 import 'package:finder/screens/create_post.dart';
 import 'package:finder/screens/manage_posts.dart';
+import 'package:finder/screens/error_page.dart';
+
+import 'dart:io';
 
 class ProviderHomePage extends StatefulWidget {
   final dynamic db;
@@ -30,6 +33,15 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   TextEditingController filterEndDate = TextEditingController();
   TextEditingController searchController = TextEditingController();
   dynamic filterQuery = {};
+  void checkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
+    } on SocketException catch (_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => ErrorPage(db: widget.db)));
+    }
+  }
 
   void loadLatestPosts() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -40,6 +52,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   @override
   void initState() {
     super.initState();
+    checkConnection();
     filterStartDate.text = "";
     loadLatestPosts();
   }

@@ -33,6 +33,9 @@ dependencies:
   flutter_image_compress: ^0.7.0
   flutter_absolute_path: ^1.0.6
   dotted_border: ^2.0.0+1
+  charcode: ^1.1.0
+  bouncing_widget: ^2.0.0
+
 
 
 

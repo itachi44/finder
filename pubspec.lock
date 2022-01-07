@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  bouncing_widget:
+    dependency: "direct main"
+    description:
+      name: bouncing_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   bson:
     dependency: transitive
     description:
@@ -44,7 +51,7 @@ packages:
     source: hosted
     version: "1.1.0"
   charcode:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: charcode
       url: "https://pub.dartlang.org"

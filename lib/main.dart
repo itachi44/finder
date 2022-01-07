@@ -51,14 +51,9 @@ Future<void> main() async {
                   )
                 : isConnected == false
                     ? ErrorPage(
+                        pageToGo: "/",
                         db: db,
                       )
                     : null,
-    routes: {
-      '/Onboarding': (context) => OnboardingPage(),
-      '/CustomerHomePage': (context) => CustomerHomePage(),
-      '/ProviderHomePage': (context) => ProviderHomePage(),
-      '/ErrorPage': (context) => ErrorPage()
-    },
   ));
 }

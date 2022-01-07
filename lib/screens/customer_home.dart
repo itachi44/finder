@@ -5,7 +5,6 @@ import 'package:finder/components/sliding_cards.dart';
 import 'package:finder/components/tabs.dart';
 import 'package:finder/screens/see_all.dart';
 import 'package:finder/screens/login.dart';
-
 import 'dart:io';
 
 class Header extends StatelessWidget {
