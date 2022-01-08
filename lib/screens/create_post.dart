@@ -7,6 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:charcode/charcode.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:finder/components/dialog.dart';
+import 'package:finder/helper/db/mongodb.dart';
 import 'dart:io';
 
 class NewPostPage extends StatefulWidget {
@@ -323,6 +324,34 @@ class _NewPostPageState extends State<NewPostPage> {
                                 btnText: "Close",
                               );
                             });
+                      } else {
+                        //create the post
+                        var postQuery = {};
+                        //category
+                        if (houseValue == true) {
+                          postQuery["category"] = houseValue;
+                        } else {
+                          postQuery["category"] = apartmentValue;
+                        }
+                        //title
+                        postQuery["title"] = titleController.text;
+                        //country
+                        postQuery["country"] = countryController.text;
+                        //city
+                        postQuery["city"] = cityController.text;
+                        //district
+                        postQuery["district"] = districtController.text;
+                        //price
+                        postQuery["price"] =
+                            int.parse(priceController.text.split("\$")[0]);
+                        //size
+                        postQuery["size"] =
+                            int.parse(sizeController.text.split("\m")[0]);
+                        //description
+                        postQuery["description"] = descriptionController.text;
+                        var result = await MongoDatabase.createPost(
+                            postQuery, _selectedFiles, widget.db);
+                        print(result);
                       }
                     } else {
                       //handle input errors
@@ -442,25 +471,30 @@ class _NewPostPageState extends State<NewPostPage> {
                           )
                         : Container(
                             height: 100,
-                            child: Expanded(
-                                child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: GridView.builder(
-                                  itemCount: _selectedFiles.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 4),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: Image.memory(
-                                        (base64Decode(_selectedFiles[index])),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  }),
-                            )),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: GridView.builder(
+                                      itemCount: _selectedFiles.length,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Image.memory(
+                                            (base64Decode(
+                                                _selectedFiles[index])),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      }),
+                                )),
+                              ],
+                            ),
                           ),
                     SizedBox(
                       height: 10,
@@ -469,7 +503,7 @@ class _NewPostPageState extends State<NewPostPage> {
                       child: Center(
                         child: Column(
                           children: [
-                            Text("Catégory ? ",
+                            Text("Catégory ",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,

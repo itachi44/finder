@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 class MongoDatabase {
   static var db, userCollection;
@@ -228,6 +229,38 @@ class MongoDatabase {
 
       final result = await postCollection.aggregateToStream(pipeline).toList();
       return result;
+    } catch (e) {
+      print(e);
+      return Future.value(e);
+    }
+  }
+
+//TODO: mettre provider id aussi
+  static Future createPost(postQuery, images, db) async {
+    try {
+      //TODO request get user id
+      var postCollection = db.collection("finderApp_post");
+      //var picturesCollection = db.collection("finderApp_picture");
+      GridFS bucket = GridFS(db, "finderApp_pictures");
+      var id_pictures = [];
+      dynamic imagesQuery = {};
+      for (int i = 0; i < images.length; i++) {
+        imagesQuery["image"] = images[i];
+        imagesQuery["_id"] = new ObjectId();
+        id_pictures.add(imagesQuery["_id"]);
+        var res = await bucket.chunks
+            .insert(new Map<String, dynamic>.from(imagesQuery));
+      }
+      print(id_pictures);
+      //TODO : mettre la liste des id des images dans postQuery["pictures"]
+      postQuery["_id"] = new ObjectId();
+      postQuery["pistures"] = id_pictures;
+      print(postQuery);
+      print(new Map<String, dynamic>.from(postQuery));
+
+      await postCollection.insert(new Map<String, dynamic>.from(postQuery));
+
+      return "done";
     } catch (e) {
       print(e);
       return Future.value(e);
