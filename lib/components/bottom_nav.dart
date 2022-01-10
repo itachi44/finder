@@ -255,8 +255,10 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       houseValue = false;
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SearchResultPage(searchResult: resultList)));
+                          builder: (BuildContext context) => SearchResultPage(
+                                searchResult: resultList,
+                                db: widget.db,
+                              )));
                     }
                   },
                   decoration: InputDecoration(

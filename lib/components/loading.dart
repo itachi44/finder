@@ -14,7 +14,7 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          "Loading posts...",
+          "Building results...",
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -32,10 +32,6 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
               );
             }),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
     );
   }
 
@@ -49,7 +45,7 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
             width: 50,
             height: 50,
             decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                BoxDecoration(shape: BoxShape.rectangle, color: Colors.grey),
           ),
           SizedBox(width: 20),
           Expanded(

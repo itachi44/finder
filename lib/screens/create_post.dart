@@ -8,11 +8,15 @@ import 'package:charcode/charcode.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:finder/components/dialog.dart';
 import 'package:finder/helper/db/mongodb.dart';
+import 'package:finder/screens/provider_home.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
 import 'dart:io';
 
 class NewPostPage extends StatefulWidget {
   final dynamic db;
-  NewPostPage({Key key, this.db}) : super(key: key);
+  final dynamic providerId;
+  NewPostPage({Key key, this.db, this.providerId}) : super(key: key);
 
   @override
   _NewPostPageState createState() => _NewPostPageState();
@@ -86,11 +90,14 @@ class _NewPostPageState extends State<NewPostPage> {
           selectCircleStrokeColor: "#000000",
         ),
       );
+      //compress images
 
       for (var asset in _selectedImages) {
         var path = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-        var file = await getFileFromAsset(path);
-        var base64image = base64Encode(file.readAsBytesSync());
+        //var file = await getFileFromAsset(path);
+        var _cmpressedFile =
+            await FlutterImageCompress.compressWithFile(path, quality: 50);
+        var base64image = base64Encode(_cmpressedFile);
         _selectedFiles.add(base64image);
       }
       return _selectedFiles;
@@ -325,6 +332,7 @@ class _NewPostPageState extends State<NewPostPage> {
                               );
                             });
                       } else {
+                        showSpinner(context, "Creating your post...");
                         //create the post
                         var postQuery = {};
                         //category
@@ -348,10 +356,39 @@ class _NewPostPageState extends State<NewPostPage> {
                         postQuery["size"] =
                             int.parse(sizeController.text.split("\m")[0]);
                         //description
-                        postQuery["description"] = descriptionController.text;
-                        var result = await MongoDatabase.createPost(
-                            postQuery, _selectedFiles, widget.db);
-                        print(result);
+                        //get the provider Username infos
+                        var username = postQuery["description"] =
+                            descriptionController.text;
+                        var result = await MongoDatabase.createPost(postQuery,
+                            _selectedFiles, widget.db, widget.providerId);
+                        if (result == "done") {
+                          Navigator.of(context).pop();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogBox(
+                                  color: Colors.green,
+                                  title:
+                                      "Your post has been succesfully created.",
+                                  description:
+                                      "We'll be happy to show this to our customer",
+                                  btnText: "Close",
+                                  pageToGo: "provider_home",
+                                  db: widget.db,
+                                );
+                              });
+                        } else {
+                          Navigator.of(context).pop();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogBox(
+                                  title: "Something wrong",
+                                  description: "Try again later.",
+                                  btnText: "Close",
+                                );
+                              });
+                        }
                       }
                     } else {
                       //handle input errors

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/components/nav_drawer.dart';
@@ -29,6 +31,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   dynamic latestPosts = [];
   dynamic initialPosts = [];
   dynamic provider;
+  dynamic providerId;
   TextEditingController filterStartDate = TextEditingController();
   TextEditingController filterEndDate = TextEditingController();
   TextEditingController searchController = TextEditingController();
@@ -46,6 +49,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   void loadLatestPosts() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     provider = preferences.getString("providerUsername");
+    providerId = jsonDecode(preferences.getString("providerId"));
     latestPosts = await getLatestPosts(context, provider);
   }
 
@@ -459,7 +463,10 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
         onTap: () {
           if (page == "NewPost") {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => NewPostPage(db: widget.db)));
+                builder: (BuildContext context) => NewPostPage(
+                      db: widget.db,
+                      providerId: providerId,
+                    )));
           } else if (page == "ManagePost") {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>

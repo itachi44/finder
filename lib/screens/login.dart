@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +31,9 @@ class _LogInPageState extends State<LogInPage> {
     if (result.length == 1) {
       prefs.setBool("isProviderAuthenticated", true);
       prefs.setString("providerUsername", result[0]["account"]["username"]);
+      prefs.setString("providerId", jsonEncode(result[0]["_id"]));
+      print(jsonEncode(result[0]["_id"]));
+
       Navigator.of(context).pop();
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

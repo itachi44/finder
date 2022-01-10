@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 
 class MongoDatabase {
   static var db, userCollection;
@@ -43,6 +42,7 @@ class MongoDatabase {
 
       final provider =
           await providerCollection.aggregateToStream(pipeline).toList();
+
       return provider;
     } catch (e) {
       print(e);
@@ -86,38 +86,33 @@ class MongoDatabase {
                   "price": {"\$gte": minPrice, "\$lte": maxPrice}
                 }
               },
-        //lookup
-
-        {
-          '\$lookup': {
-            'from': 'finderApp_picture',
-            'let': {'pictures': '\$pictures'},
-            'pipeline': [
-              {
-                '\$match': {
-                  "pictures": {
-                    "exists": true
-                  }, //check if pictures before doing lookup
-                  '\$expr': {
-                    '\$in': ['\$id', "\$\$pictures"]
-                  }
-                }
-              },
-              {
-                '\$project': {'_id': 0}
-              }
-            ],
-            'as': 'pictures'
-          }
-        }
       ];
-      print(pipeline);
       final result = await postCollection.aggregateToStream(pipeline).toList();
+
       return result;
     } catch (e) {
       print(e);
       return Future.value(e);
     }
+  }
+
+  static Future getImages(result, db) async {
+    //get images for each post
+    GridFS bucket = GridFS(db, "finderApp_pictures");
+
+    for (int i = 0; i < result.length; i++) {
+      var images = [];
+      var post = result[i];
+      if (post.containsKey("pictures")) {
+        var picturesId = post["pictures"];
+        for (var id in picturesId) {
+          var img = await bucket.chunks.findOne({"_id": id});
+          images.add(img);
+        }
+        result[i]["pictures"] = images;
+      }
+    }
+    return result;
   }
 
   //get latest posts
@@ -235,28 +230,26 @@ class MongoDatabase {
     }
   }
 
-//TODO: mettre provider id aussi
-  static Future createPost(postQuery, images, db) async {
+  static Future createPost(postQuery, images, db, idProvider) async {
     try {
-      //TODO request get user id
       var postCollection = db.collection("finderApp_post");
       //var picturesCollection = db.collection("finderApp_picture");
       GridFS bucket = GridFS(db, "finderApp_pictures");
-      var id_pictures = [];
+      var providerId = ObjectId.fromHexString(idProvider);
+      var idPictures = [];
+      //compress images
+
       dynamic imagesQuery = {};
       for (int i = 0; i < images.length; i++) {
         imagesQuery["image"] = images[i];
         imagesQuery["_id"] = new ObjectId();
-        id_pictures.add(imagesQuery["_id"]);
-        var res = await bucket.chunks
-            .insert(new Map<String, dynamic>.from(imagesQuery));
+        idPictures.add(imagesQuery["_id"]);
+        await bucket.chunks.insert(new Map<String, dynamic>.from(imagesQuery));
       }
-      print(id_pictures);
-      //TODO : mettre la liste des id des images dans postQuery["pictures"]
       postQuery["_id"] = new ObjectId();
-      postQuery["pistures"] = id_pictures;
-      print(postQuery);
-      print(new Map<String, dynamic>.from(postQuery));
+      postQuery["pictures"] = idPictures;
+      postQuery["provider_id"] = providerId;
+      postQuery["date"] = DateTime.now();
 
       await postCollection.insert(new Map<String, dynamic>.from(postQuery));
 

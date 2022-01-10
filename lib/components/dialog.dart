@@ -1,11 +1,22 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:finder/screens/provider_home.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String title, description, btnText;
+  final dynamic color;
+  final dynamic pageToGo;
+  final dynamic db;
 
-  const CustomDialogBox({Key key, this.title, this.description, this.btnText})
+  const CustomDialogBox(
+      {Key key,
+      this.title,
+      this.description,
+      this.btnText,
+      this.color = Colors.red,
+      this.pageToGo,
+      this.db})
       : super(key: key);
 
   @override
@@ -44,10 +55,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             children: <Widget>[
               Text(
                 widget.title,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
-                    color: Colors.red),
+                    color: widget.color),
               ),
               SizedBox(
                 height: 15,
@@ -62,9 +74,20 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      if (widget.pageToGo != "") {
+                        if (widget.pageToGo == "provider_home") {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ProviderHomePage(db: widget.db)));
+                        } else {
+                          Navigator.of(context).pop();
+                        }
+                      } else {
+                        Navigator.of(context).pop();
+                      }
                     },
                     child: Text(
                       widget.btnText,

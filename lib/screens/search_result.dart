@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:finder/helper/db/mongodb.dart';
 import 'package:intl/intl.dart';
+import 'package:finder/components/loading.dart';
 
 class SearchResultPage extends StatefulWidget {
   final dynamic searchResult;
-  SearchResultPage({Key key, this.searchResult}) : super(key: key);
+  final dynamic db;
+  SearchResultPage({Key key, this.searchResult, this.db}) : super(key: key);
 
   @override
   _SearchResultPageState createState() => _SearchResultPageState();
@@ -22,7 +27,7 @@ class _SearchResultPageState extends State<SearchResultPage>
   void initState() {
     super.initState();
     searchResultList = widget.searchResult;
-    print(searchResultList);
+    buildResult();
     // _scrollController.addListener(() {
     //   if (_scrollController.position.pixels <= 56)
     //     setState(() => _physics = ClampingScrollPhysics());
@@ -40,6 +45,11 @@ class _SearchResultPageState extends State<SearchResultPage>
           }
         });
       });
+  }
+
+  buildResult() async {
+    var resultCopy = List.from(searchResultList);
+    searchResultList = await MongoDatabase.getImages(resultCopy, widget.db);
   }
 
   @override
@@ -70,8 +80,8 @@ class _SearchResultPageState extends State<SearchResultPage>
                 left: Radius.circular(1),
                 right: Radius.circular(1),
               ),
-              child: Image.asset(
-                'assets/images/onboarding2.jpeg',
+              child: Image.memory(
+                base64Decode(img),
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,
@@ -160,7 +170,7 @@ class _SearchResultPageState extends State<SearchResultPage>
                     dynamic data = searchResultList[position];
                   },
                   child: resultCard(
-                      //img: result["img"], //TODO: handle images
+                      img: searchResultList[position]["pictures"][0]["image"],
                       title: searchResultList[position]["title"],
                       date: searchResultList[position]["date"],
                       price: searchResultList[position]["price"],
@@ -170,6 +180,22 @@ class _SearchResultPageState extends State<SearchResultPage>
                           ", " +
                           searchResultList[position]["district"]),
                 )));
+  }
+
+  Widget _buildContent() {
+    return FutureBuilder<dynamic>(
+        future: buildResult(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SkeletonLoading();
+          } else {
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return _buildResult();
+            }
+          }
+        });
   }
 
   @override
@@ -190,7 +216,7 @@ class _SearchResultPageState extends State<SearchResultPage>
           },
         ),
       ),
-      body: _buildResult(),
+      body: _buildContent(),
       floatingActionButton: _showBackToTopButton == false
           ? null
           : FloatingActionButton(
