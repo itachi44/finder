@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:intl/intl.dart';
-import 'package:finder/components/loading.dart';
+import 'package:finder/screens/see_post.dart';
 
 class SearchResultPage extends StatefulWidget {
   final dynamic searchResult;
@@ -27,7 +26,7 @@ class _SearchResultPageState extends State<SearchResultPage>
   void initState() {
     super.initState();
     searchResultList = widget.searchResult;
-    buildResult();
+    //buildResult();
     // _scrollController.addListener(() {
     //   if (_scrollController.position.pixels <= 56)
     //     setState(() => _physics = ClampingScrollPhysics());
@@ -47,11 +46,6 @@ class _SearchResultPageState extends State<SearchResultPage>
       });
   }
 
-  buildResult() async {
-    var resultCopy = List.from(searchResultList);
-    searchResultList = await MongoDatabase.getImages(resultCopy, widget.db);
-  }
-
   @override
   void dispose() {
     _scrollController.dispose(); // dispose the controller
@@ -65,11 +59,7 @@ class _SearchResultPageState extends State<SearchResultPage>
   }
 
   Widget resultCard(
-      {String img,
-      String title,
-      dynamic date,
-      dynamic price,
-      dynamic location}) {
+      {String title, dynamic date, dynamic price, dynamic location}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -80,8 +70,8 @@ class _SearchResultPageState extends State<SearchResultPage>
                 left: Radius.circular(1),
                 right: Radius.circular(1),
               ),
-              child: Image.memory(
-                base64Decode(img),
+              child: Image.asset(
+                "assets/images/onboarding2.jpeg",
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,
@@ -166,11 +156,12 @@ class _SearchResultPageState extends State<SearchResultPage>
             //physics: _physics,
             itemBuilder: (context, position) => InkWell(
                   onTap: () {
-                    dynamic id = searchResultList[position]["id"];
                     dynamic data = searchResultList[position];
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            SeePostPage(post: data, db: widget.db)));
                   },
                   child: resultCard(
-                      img: searchResultList[position]["pictures"][0]["image"],
                       title: searchResultList[position]["title"],
                       date: searchResultList[position]["date"],
                       price: searchResultList[position]["price"],
@@ -180,22 +171,6 @@ class _SearchResultPageState extends State<SearchResultPage>
                           ", " +
                           searchResultList[position]["district"]),
                 )));
-  }
-
-  Widget _buildContent() {
-    return FutureBuilder<dynamic>(
-        future: buildResult(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SkeletonLoading();
-          } else {
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              return _buildResult();
-            }
-          }
-        });
   }
 
   @override
@@ -216,7 +191,7 @@ class _SearchResultPageState extends State<SearchResultPage>
           },
         ),
       ),
-      body: _buildContent(),
+      body: _buildResult(),
       floatingActionButton: _showBackToTopButton == false
           ? null
           : FloatingActionButton(

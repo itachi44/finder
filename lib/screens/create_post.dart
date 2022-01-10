@@ -96,7 +96,7 @@ class _NewPostPageState extends State<NewPostPage> {
         var path = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
         //var file = await getFileFromAsset(path);
         var _cmpressedFile =
-            await FlutterImageCompress.compressWithFile(path, quality: 50);
+            await FlutterImageCompress.compressWithFile(path, quality: 20);
         var base64image = base64Encode(_cmpressedFile);
         _selectedFiles.add(base64image);
       }

@@ -96,23 +96,18 @@ class MongoDatabase {
     }
   }
 
-  static Future getImages(result, db) async {
-    //get images for each post
+  static Future getImages(post, db) async {
     GridFS bucket = GridFS(db, "finderApp_pictures");
-
-    for (int i = 0; i < result.length; i++) {
-      var images = [];
-      var post = result[i];
-      if (post.containsKey("pictures")) {
-        var picturesId = post["pictures"];
-        for (var id in picturesId) {
-          var img = await bucket.chunks.findOne({"_id": id});
-          images.add(img);
-        }
-        result[i]["pictures"] = images;
+    var images = [];
+    if (post.containsKey("pictures")) {
+      var picturesId = post["pictures"];
+      for (var id in picturesId) {
+        var img = await bucket.chunks.findOne({"_id": id});
+        images.add(img);
       }
+      post["pictures"] = images;
     }
-    return result;
+    return post;
   }
 
   //get latest posts
@@ -143,26 +138,6 @@ class MongoDatabase {
         },
         {
           '\$sort': {'date': -1}
-        },
-        {
-          '\$lookup': {
-            'from': 'finderApp_picture',
-            'let': {'pictures': '\$pictures'},
-            'pipeline': [
-              {
-                '\$match': {
-                  "pictures": {"exists": true},
-                  '\$expr': {
-                    '\$in': ['\$id', "\$\$pictures"]
-                  }
-                }
-              },
-              {
-                '\$project': {'_id': 0}
-              }
-            ],
-            'as': 'pictures'
-          }
         }
       ];
       final posts = await postCollection.aggregateToStream(pipeline2).toList();
@@ -201,27 +176,6 @@ class MongoDatabase {
         });
       }
 
-      pipeline.add({
-        '\$lookup': {
-          'from': 'finderApp_picture',
-          'let': {'pictures': '\$pictures'},
-          'pipeline': [
-            {
-              '\$match': {
-                "pictures": {"exists": true},
-                '\$expr': {
-                  '\$in': ['\$id', "\$\$pictures"]
-                }
-              }
-            },
-            {
-              '\$project': {'_id': 0}
-            }
-          ],
-          'as': 'pictures'
-        }
-      });
-
       final result = await postCollection.aggregateToStream(pipeline).toList();
       return result;
     } catch (e) {
@@ -233,7 +187,6 @@ class MongoDatabase {
   static Future createPost(postQuery, images, db, idProvider) async {
     try {
       var postCollection = db.collection("finderApp_post");
-      //var picturesCollection = db.collection("finderApp_picture");
       GridFS bucket = GridFS(db, "finderApp_pictures");
       var providerId = ObjectId.fromHexString(idProvider);
       var idPictures = [];
