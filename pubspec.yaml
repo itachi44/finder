@@ -35,6 +35,10 @@ dependencies:
   dotted_border: ^2.0.0+1
   charcode: ^1.1.0
   bouncing_widget: ^2.0.0
+  google_fonts: ^1.1.2
+  async: ^2.4.2
+
+
 
 
 

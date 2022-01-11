@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:async/async.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/components/nav_drawer.dart';
@@ -627,10 +627,14 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
     );
   }
 
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
 //latest posts section
   Future getLatestPosts(context, provider) async {
-    latestPosts = await MongoDatabase.getLatestPosts(provider, widget.db);
-    return latestPosts;
+    return this._memoizer.runOnce(() async {
+      latestPosts = await MongoDatabase.getLatestPosts(provider, widget.db);
+      return latestPosts;
+    });
   }
 
   RefreshController _refreshController =
@@ -649,6 +653,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
+    await getLatestPosts(context, provider);
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
