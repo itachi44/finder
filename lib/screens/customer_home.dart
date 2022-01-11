@@ -84,14 +84,16 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               )),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => SeeAllPage()));
+                builder: (BuildContext context) => SeeAllPage(
+                      db: widget.db,
+                    )));
           },
         ));
   }
 
   void checkConnection() async {
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await InternetAddress.lookup('www.google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
     } on SocketException catch (_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(

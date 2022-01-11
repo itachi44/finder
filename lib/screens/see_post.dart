@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:finder/components/loading.dart';
@@ -26,6 +26,7 @@ class _SeePostPageState extends State<SeePostPage>
   dynamic imagePosition1;
   dynamic imagePosition2;
   dynamic imagePosition3;
+  dynamic location, price, size, description, date, title, category;
 
   @override
   void initState() {
@@ -111,12 +112,25 @@ class _SeePostPageState extends State<SeePostPage>
     );
   }
 
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+
   Future buildResult() {
     return this._memoizer.runOnce(() async {
       var postCopy = Map.from(widget.post);
       completePost = await MongoDatabase.getImages(postCopy, widget.db);
       setState(() {
         completePost = completePost;
+        category = completePost["category"];
+        location = completePost['country'] +
+            ", " +
+            completePost['city'] +
+            " : " +
+            completePost['district'];
+        date = formatter.format(completePost["date"]).substring(0, 10);
+        price = completePost["price"];
+        size = completePost["size"];
+        title = completePost["title"];
+        description = completePost["description"];
         imageCenter = completePost["pictures"][0]["image"];
         if (completePost["pictures"].asMap().containsKey(1)) {
           imagePosition1 = completePost["pictures"][1]["image"];
@@ -165,7 +179,6 @@ class _SeePostPageState extends State<SeePostPage>
   Widget _thumbnail(dynamic image) {
     return AnimatedBuilder(
       animation: animation,
-      //  builder: null,
       builder: (context, child) => AnimatedOpacity(
         opacity: animation.value,
         duration: Duration(milliseconds: 500),
@@ -173,21 +186,24 @@ class _SeePostPageState extends State<SeePostPage>
       ),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          height: 40,
-          width: 65,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: MemoryImage(image),
+        child: AbsorbPointer(
+          child: Container(
+            height: 40,
+            width: 65,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: MemoryImage(image),
+              ),
+              border: Border.all(
+                color: const Color(0xffa8a09b),
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(13)),
+
+              // color: Theme.of(context).backgroundColor,
             ),
-            border: Border.all(
-              color: const Color(0xffa8a09b),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            // color: Theme.of(context).backgroundColor,
-          ),
-        ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13))),
+          ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13))),
+        ),
       ),
     );
   }
@@ -212,10 +228,9 @@ class _SeePostPageState extends State<SeePostPage>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            //TODO: put location here
             Expanded(
               child: TitleText(
-                text: "Title here ",
+                text: location,
                 fontSize: 14,
               ),
             )
@@ -242,8 +257,7 @@ class _SeePostPageState extends State<SeePostPage>
           ],
         ),
         SizedBox(height: 20),
-        //TODO : put description here
-        Text("deciption here"),
+        Text(description),
       ],
     );
   }
@@ -286,8 +300,7 @@ class _SeePostPageState extends State<SeePostPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      //TODO : put the title here
-                      TitleText(text: "NIKE AIR MAX 200 ", fontSize: 25),
+                      TitleText(text: title.toUpperCase(), fontSize: 25),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
@@ -302,12 +315,15 @@ class _SeePostPageState extends State<SeePostPage>
                                 fontSize: 18,
                                 color: Color(0xffF72804),
                               ),
-                              //TODO change with category cotegory==house? : per month
-                              //TODO : put the price here
-                              TitleText(
-                                text: "240",
-                                fontSize: 25,
-                              ),
+                              category == "house"
+                                  ? TitleText(
+                                      text: price.toString(),
+                                      fontSize: 25,
+                                    )
+                                  : TitleText(
+                                      text: price.toString() + " per month",
+                                      fontSize: 25,
+                                    ),
                             ],
                           ),
                           SizedBox(
@@ -319,7 +335,7 @@ class _SeePostPageState extends State<SeePostPage>
                                 width: 5,
                               ),
                               TitleText(
-                                text: "500",
+                                text: size.toString(),
                                 fontSize: 22,
                               ),
                               TitleText(
@@ -366,42 +382,39 @@ class _SeePostPageState extends State<SeePostPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            imagePosition1 != null
-                ? InkWell(
-                    onTap: () {
-                      setState(() {
-                        dynamic temp;
-                        temp = imageCenter;
-                        imageCenter = imagePosition1;
-                        imagePosition1 = temp;
-                      });
-                    },
-                    child: _thumbnail(base64Decode(imagePosition1)))
-                : null,
-            imagePosition2 != null
-                ? InkWell(
-                    onTap: () {
-                      setState(() {
-                        dynamic temp;
-                        temp = imageCenter;
-                        imageCenter = imagePosition2;
-                        imagePosition2 = temp;
-                      });
-                    },
-                    child: _thumbnail(base64Decode(imagePosition2)))
-                : null,
-            imagePosition3 != null
-                ? InkWell(
-                    onTap: () {
-                      setState(() {
-                        dynamic temp;
-                        temp = imageCenter;
-                        imageCenter = imagePosition3;
-                        imagePosition3 = temp;
-                      });
-                    },
-                    child: _thumbnail(base64Decode(imagePosition3)))
-                : null
+            if (imagePosition1 != null)
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      var temp;
+                      temp = imageCenter;
+                      imageCenter = imagePosition1;
+                      imagePosition1 = temp;
+                    });
+                  },
+                  child: _thumbnail(base64Decode(imagePosition1))),
+            if (imagePosition2 != null)
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      var temp;
+                      temp = imageCenter;
+                      imageCenter = imagePosition2;
+                      imagePosition2 = temp;
+                    });
+                  },
+                  child: _thumbnail(base64Decode(imagePosition2))),
+            if (imagePosition3 != null)
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      var temp;
+                      temp = imageCenter;
+                      imageCenter = imagePosition3;
+                      imagePosition3 = temp;
+                    });
+                  },
+                  child: _thumbnail(base64Decode(imagePosition3))),
           ],
         ));
   }

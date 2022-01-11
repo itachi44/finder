@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'package:crypt/crypt.dart';
 
 class MongoDatabase {
   static var db, userCollection;
@@ -22,6 +23,8 @@ class MongoDatabase {
   //connexion
   static Future handleConnection(providerData, db) async {
     var providerCollection = db.collection("finderApp_provider");
+    String hashedPassword = Crypt.sha256(providerData["password"], salt: '1234')
+        .toString(); //TODO: change the salt and save it in secureStorage
 
     try {
       dynamic pipeline = AggregationPipelineBuilder()
@@ -35,9 +38,8 @@ class MongoDatabase {
             {"account.username": providerData["identifier"]},
             {"email": providerData["identifier"]}
           ])))
-          .addStage(Match(where
-              .eq('account.password', providerData["password"])
-              .map['\$query']))
+          .addStage(Match(
+              where.eq('account.password', hashedPassword).map['\$query']))
           .build();
 
       final provider =
@@ -110,31 +112,27 @@ class MongoDatabase {
     return post;
   }
 
+  static Future getAllPosts(db) async {
+    var postCollection = db.collection("finderApp_post");
+    dynamic pipeline = [
+      {
+        "\$sort": {"date": -1}
+      }
+    ];
+    final posts = await postCollection.aggregateToStream(pipeline).toList();
+    return posts;
+  }
+
   //get latest posts
   static Future getLatestPosts(provider, db) async {
+    var providerId = ObjectId.fromHexString(provider);
+
     var postCollection = db.collection("finderApp_post");
-    var providerCollection = db.collection("finderApp_provider");
 
     try {
-      dynamic pipeline1 = AggregationPipelineBuilder()
-          .addStage(Lookup(
-              from: 'finderApp_account',
-              localField: 'account_id',
-              foreignField: 'id',
-              as: 'account'))
-          .addStage(Unwind(Field('account')))
-          .addStage(Match(Or([
-            {"account.username": provider},
-            {"email": provider}
-          ])))
-          .build();
-
-      final providerInfos =
-          await providerCollection.aggregateToStream(pipeline1).toList();
-      int idProvider = providerInfos[0]["id"];
       dynamic pipeline2 = [
         {
-          '\$match': {'provider_id': idProvider}
+          '\$match': {'provider_id': providerId}
         },
         {
           '\$sort': {'date': -1}

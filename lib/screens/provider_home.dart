@@ -13,7 +13,7 @@ import 'package:finder/screens/search_result.dart';
 import 'package:finder/screens/create_post.dart';
 import 'package:finder/screens/manage_posts.dart';
 import 'package:finder/screens/error_page.dart';
-
+import 'package:finder/screens/see_post.dart';
 import 'dart:io';
 
 class ProviderHomePage extends StatefulWidget {
@@ -50,7 +50,10 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     provider = preferences.getString("providerUsername");
     providerId = jsonDecode(preferences.getString("providerId"));
-    latestPosts = await getLatestPosts(context, provider);
+    latestPosts = await getLatestPosts(context, providerId);
+    setState(() {
+      latestPosts = latestPosts;
+    });
   }
 
   @override
@@ -149,8 +152,10 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                         print(result);
                         Navigator.of(context).pop();
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                SearchResultPage(searchResult: result)));
+                            builder: (BuildContext context) => SearchResultPage(
+                                  searchResult: result,
+                                  db: widget.db,
+                                )));
                       }
                     }),
               ),
@@ -630,9 +635,9 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
 
 //latest posts section
-  Future getLatestPosts(context, provider) async {
+  Future getLatestPosts(context, providerId) async {
     return this._memoizer.runOnce(() async {
-      latestPosts = await MongoDatabase.getLatestPosts(provider, widget.db);
+      latestPosts = await MongoDatabase.getLatestPosts(providerId, widget.db);
       return latestPosts;
     });
   }
@@ -651,22 +656,15 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   }
 
   void _onRefresh() async {
-    // monitor network fetch
+    print("refreshing");
     await Future.delayed(Duration(milliseconds: 1000));
-    await getLatestPosts(context, provider);
-    // if failed,use refreshFailed()
+    await getLatestPosts(context, providerId);
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    //ajouter un nouvel élément
-    print(latestPosts.length);
-    print(initialPosts.length);
     if (latestPosts.length > initialPosts.length) {
-      print("here");
       initialPosts.add((latestPosts[initialPosts.length]));
       if (mounted) setState(() {});
       _refreshController.loadComplete();
@@ -714,7 +712,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                     width: 250,
                     child: Text(title,
                         textAlign: TextAlign.center,
-                        //overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 16)),
                   ),
                 ),
@@ -772,7 +770,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
   Widget _buildLatestPosts() {
-    if (latestPosts == null) {
+    if (latestPosts == null || latestPosts.length == 0) {
       return Container(
         height: MediaQuery.of(context).size.height / 5,
         child: Row(
@@ -795,7 +793,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
       );
     } else {
       return FutureBuilder<dynamic>(
-          future: getLatestPosts(context, provider),
+          future: getLatestPosts(context, providerId),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -865,7 +863,12 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
         onLoading: _onLoading,
         child: ListView.builder(
           itemBuilder: (c, i) => InkWell(
-            onTap: () {},
+            onTap: () {
+              dynamic data = latestPosts[i];
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      SeePostPage(post: data, db: widget.db)));
+            },
             child: _buildCard(
                 //img: result["img"], //TODO: handle images
                 title: initialPosts[i]["title"],

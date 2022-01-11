@@ -95,7 +95,7 @@ class _NewPostPageState extends State<NewPostPage> {
         var path = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
         //var file = await getFileFromAsset(path);
         var _cmpressedFile =
-            await FlutterImageCompress.compressWithFile(path, quality: 20);
+            await FlutterImageCompress.compressWithFile(path, quality: 15);
         var base64image = base64Encode(_cmpressedFile);
         _selectedFiles.add(base64image);
       }
@@ -356,8 +356,7 @@ class _NewPostPageState extends State<NewPostPage> {
                             int.parse(sizeController.text.split("\m")[0]);
                         //description
                         //get the provider Username infos
-                        var username = postQuery["description"] =
-                            descriptionController.text;
+                        postQuery["description"] = descriptionController.text;
                         var result = await MongoDatabase.createPost(postQuery,
                             _selectedFiles, widget.db, widget.providerId);
                         if (result == "done") {
