@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:finder/components/loading.dart';
@@ -20,10 +22,15 @@ class _SeePostPageState extends State<SeePostPage>
   AnimationController controller;
   Animation<double> animation;
   dynamic completePost;
+  dynamic imageCenter;
+  dynamic imagePosition1;
+  dynamic imagePosition2;
+  dynamic imagePosition3;
 
   @override
   void initState() {
     super.initState();
+    buildResult();
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     animation = Tween<double>(begin: 0, end: 1).animate(
@@ -108,7 +115,19 @@ class _SeePostPageState extends State<SeePostPage>
     return this._memoizer.runOnce(() async {
       var postCopy = Map.from(widget.post);
       completePost = await MongoDatabase.getImages(postCopy, widget.db);
-      return completePost;
+      setState(() {
+        completePost = completePost;
+        imageCenter = completePost["pictures"][0]["image"];
+        if (completePost["pictures"].asMap().containsKey(1)) {
+          imagePosition1 = completePost["pictures"][1]["image"];
+        }
+        if (completePost["pictures"].asMap().containsKey(2)) {
+          imagePosition2 = completePost["pictures"][2]["image"];
+        }
+        if (completePost["pictures"].asMap().containsKey(3)) {
+          imagePosition3 = completePost["pictures"][3]["image"];
+        }
+      });
     });
   }
 
@@ -130,8 +149,8 @@ class _SeePostPageState extends State<SeePostPage>
             child: ClipRRect(
               borderRadius: BorderRadius.vertical(
                   top: Radius.circular(32), bottom: Radius.circular(32)),
-              child: Image.asset(
-                'assets/images/onboarding1.jpeg',
+              child: Image.memory(
+                base64Decode(imageCenter),
                 alignment: Alignment.center,
                 height: MediaQuery.of(context).size.height / 3.8,
                 fit: BoxFit.fill,
@@ -143,7 +162,7 @@ class _SeePostPageState extends State<SeePostPage>
     );
   }
 
-  Widget _thumbnail(String image) {
+  Widget _thumbnail(dynamic image) {
     return AnimatedBuilder(
       animation: animation,
       //  builder: null,
@@ -160,7 +179,7 @@ class _SeePostPageState extends State<SeePostPage>
           decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: AssetImage(image),
+              image: MemoryImage(image),
             ),
             border: Border.all(
               color: const Color(0xffa8a09b),
@@ -196,7 +215,7 @@ class _SeePostPageState extends State<SeePostPage>
             //TODO: put location here
             Expanded(
               child: TitleText(
-                text: "Senegal, Dakar : Parcelle Assainies U14 villa N°076",
+                text: "Title here ",
                 fontSize: 14,
               ),
             )
@@ -347,9 +366,42 @@ class _SeePostPageState extends State<SeePostPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _thumbnail("assets/images/onboarding3.jpeg"),
-            _thumbnail("assets/images/onboarding3.jpeg"),
-            _thumbnail("assets/images/onboarding3.jpeg")
+            imagePosition1 != null
+                ? InkWell(
+                    onTap: () {
+                      setState(() {
+                        dynamic temp;
+                        temp = imageCenter;
+                        imageCenter = imagePosition1;
+                        imagePosition1 = temp;
+                      });
+                    },
+                    child: _thumbnail(base64Decode(imagePosition1)))
+                : null,
+            imagePosition2 != null
+                ? InkWell(
+                    onTap: () {
+                      setState(() {
+                        dynamic temp;
+                        temp = imageCenter;
+                        imageCenter = imagePosition2;
+                        imagePosition2 = temp;
+                      });
+                    },
+                    child: _thumbnail(base64Decode(imagePosition2)))
+                : null,
+            imagePosition3 != null
+                ? InkWell(
+                    onTap: () {
+                      setState(() {
+                        dynamic temp;
+                        temp = imageCenter;
+                        imageCenter = imagePosition3;
+                        imagePosition3 = temp;
+                      });
+                    },
+                    child: _thumbnail(base64Decode(imagePosition3)))
+                : null
           ],
         ));
   }
@@ -388,19 +440,12 @@ class _SeePostPageState extends State<SeePostPage>
   final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   Widget _buildContent() {
-    return FutureBuilder<dynamic>(
-        future: buildResult(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SkeletonLoading();
-          } else {
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              return _buildPost();
-            }
-          }
-        });
+    if (completePost == null) {
+      return SkeletonLoading();
+    } else {
+      return Scaffold(
+          floatingActionButton: _floatingButton(), body: _buildPost());
+    }
   }
 
   FloatingActionButton _floatingButton() {
@@ -414,7 +459,6 @@ class _SeePostPageState extends State<SeePostPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: _floatingButton(), body: _buildContent());
+    return _buildContent();
   }
 }

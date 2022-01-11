@@ -336,9 +336,9 @@ class _NewPostPageState extends State<NewPostPage> {
                         var postQuery = {};
                         //category
                         if (houseValue == true) {
-                          postQuery["category"] = houseValue;
+                          postQuery["category"] = "house";
                         } else {
-                          postQuery["category"] = apartmentValue;
+                          postQuery["category"] = "apartment";
                         }
                         //title
                         postQuery["title"] = titleController.text;
