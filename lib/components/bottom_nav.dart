@@ -102,7 +102,8 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
             onVerticalDragUpdate: _handleDragUpdate,
             onVerticalDragEnd: _handleDragEnd,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 12),
               decoration: const BoxDecoration(
                 color: Color(0xFF162A49),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
@@ -112,13 +113,13 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                   Positioned(
                     left: MediaQuery.of(context).size.width / 1.4,
                     right: 0,
-                    bottom: 35,
+                    bottom: MediaQuery.of(context).size.height / 23.2,
                     child: InkWell(
                       onTap: _toggle,
                       child: Icon(
                         Icons.menu,
                         color: Colors.white,
-                        size: 28,
+                        size: MediaQuery.of(context).size.height / 29,
                       ),
                     ),
                   ),
@@ -171,7 +172,9 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
         Container(
           width: MediaQuery.of(context).size.width,
           child: Padding(
-            padding: EdgeInsets.only(left: 2, bottom: 10),
+            padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 187.5,
+                bottom: MediaQuery.of(context).size.height / 81.2),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,16 +298,17 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
     return Container(
         child: Column(
       children: [
-        SizedBox(height: 5),
+        SizedBox(height: MediaQuery.of(context).size.height / 162.4),
         Text("Filters:",
             style: TextStyle(
               fontWeight: FontWeight.w600,
             )),
-        SizedBox(height: 15),
+        SizedBox(height: MediaQuery.of(context).size.height / 54),
         Text("Category"),
         Row(children: [
           Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 37.5),
             child: Row(
               children: [
                 Text("House"),
@@ -320,9 +324,10 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
               ],
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: MediaQuery.of(context).size.height / 54),
           Padding(
-            padding: EdgeInsets.only(left: 60),
+            padding:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 6.25),
             child: Row(
               children: [
                 Text("Apartment"),
@@ -339,13 +344,15 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
             ),
           ),
         ]),
-        SizedBox(height: 10),
+        SizedBox(height: MediaQuery.of(context).size.height / 81),
         Row(
           children: [
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 15,
+                      bottom: MediaQuery.of(context).size.height / 81),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height / 30,
@@ -369,18 +376,22 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: 15, bottom: 12),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 55,
+                  bottom: MediaQuery.of(context).size.height / 67.5),
               child: Text("< size <",
                   style: TextStyle(
                     color: Color(0xFF162A49),
-                    fontSize: 16,
+                    fontSize: MediaQuery.of(context).size.height / 50.75,
                     fontWeight: FontWeight.w500,
                   )),
             ),
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.height / 54,
+                      bottom: MediaQuery.of(context).size.height / 81),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height / 30,
@@ -405,13 +416,15 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
             )
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: MediaQuery.of(context).size.height / 81),
         Row(
           children: [
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 25,
+                      bottom: MediaQuery.of(context).size.height / 81),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height / 30,
@@ -435,7 +448,9 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: 15, bottom: 12),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 25,
+                  bottom: MediaQuery.of(context).size.height / 67.5),
               child: Text("< price <",
                   style: TextStyle(
                     color: Color(0xFF162A49),
@@ -446,7 +461,9 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15, bottom: 10),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 25,
+                      bottom: MediaQuery.of(context).size.height / 81),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height / 30,
@@ -496,13 +513,17 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: Colors.white,
               ),
-              padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 37.5,
+                  right: MediaQuery.of(context).size.width / 37.5,
+                  top: 0,
+                  bottom: 0),
               child: _buildSearchBar(),
             ),
           ),
         ),
         Positioned(
-          top: 200,
+          top: MediaQuery.of(context).size.height / 4,
           left: leftMargin,
           right: 0,
           // height: 85,
@@ -514,7 +535,11 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: Colors.white,
               ),
-              padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 37.5,
+                  right: MediaQuery.of(context).size.width / 37.5,
+                  top: 0,
+                  bottom: 0),
               child: _buildFilterItem(),
             ),
           ),
