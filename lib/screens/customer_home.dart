@@ -5,6 +5,8 @@ import 'package:finder/components/sliding_cards.dart';
 import 'package:finder/components/tabs.dart';
 import 'package:finder/screens/see_all.dart';
 import 'package:finder/screens/login.dart';
+import 'package:finder/helper/db/mongodb.dart';
+import 'package:async/async.dart';
 import 'dart:io';
 
 class Header extends StatelessWidget {
@@ -65,6 +67,10 @@ class CustomerHomePage extends StatefulWidget {
 }
 
 class _CustomerHomePageState extends State<CustomerHomePage> {
+  dynamic recentPosts;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  dynamic completePosts = [];
+
   Widget seeAll() {
     return Padding(
         padding: EdgeInsets.only(left: 20),
@@ -105,6 +111,29 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   initState() {
     super.initState();
     checkConnection();
+    loadRecentPosts();
+  }
+
+  void loadRecentPosts() async {
+    recentPosts = await getRecentPosts(context);
+    setState(() {
+      recentPosts = recentPosts;
+    });
+  }
+
+  Future getRecentPosts(context) async {
+    return this._memoizer.runOnce(() async {
+      recentPosts = await MongoDatabase.getAllPosts(widget.db, 4);
+      //get images for each post
+      for (var post in recentPosts) {
+        var postCopy = Map.from(post);
+        completePosts.add(await MongoDatabase.getImages(postCopy, widget.db));
+      }
+      setState(() {
+        completePosts = completePosts;
+      });
+      return completePosts;
+    });
   }
 
   @override

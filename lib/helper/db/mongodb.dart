@@ -112,14 +112,24 @@ class MongoDatabase {
     return post;
   }
 
-  static Future getAllPosts(db) async {
+  static Future getAllPosts(db, [limit = 0]) async {
+    dynamic posts;
     var postCollection = db.collection("finderApp_post");
-    dynamic pipeline = [
-      {
-        "\$sort": {"date": -1}
-      }
-    ];
-    final posts = await postCollection.aggregateToStream(pipeline).toList();
+    dynamic pipeline;
+
+    if (limit != 0) {
+      pipeline = [
+        {'\$limit': 4}
+      ];
+    } else {
+      pipeline = [
+        {
+          "\$sort": {"date": -1}
+        }
+      ];
+    }
+    posts = await postCollection.aggregateToStream(pipeline).toList();
+
     return posts;
   }
 

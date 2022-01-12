@@ -3,6 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
 
 class SlidingCards extends StatefulWidget {
+  final dynamic data;
+  final dynamic db;
+  SlidingCards({Key key, this.db, this.data}) : super(key: key);
+
   @override
   _SlidingCardsState createState() => _SlidingCardsState();
 }

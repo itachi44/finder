@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
 import 'package:finder/components/loading.dart';
 import 'package:finder/components/extension.dart';
+import 'package:finder/components/message_dialog.dart';
 import 'package:finder/components/title_text.dart';
 import 'package:async/async.dart';
 import 'package:charcode/charcode.dart';
@@ -463,7 +464,13 @@ class _SeePostPageState extends State<SeePostPage>
 
   FloatingActionButton _floatingButton() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return MessageDialog();
+            });
+      },
       backgroundColor: Color(0xFF162A49),
       child: Icon(Icons.message,
           color: Theme.of(context).floatingActionButtonTheme.backgroundColor),
