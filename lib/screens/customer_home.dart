@@ -1,6 +1,7 @@
 import 'package:finder/screens/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/components/bottom_nav.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:finder/components/sliding_cards.dart';
 import 'package:finder/components/tabs.dart';
 import 'package:finder/screens/see_all.dart';
@@ -111,17 +112,10 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   initState() {
     super.initState();
     checkConnection();
-    loadRecentPosts();
+    getRecentPosts();
   }
 
-  void loadRecentPosts() async {
-    recentPosts = await getRecentPosts(context);
-    setState(() {
-      recentPosts = recentPosts;
-    });
-  }
-
-  Future getRecentPosts(context) async {
+  getRecentPosts() {
     return this._memoizer.runOnce(() async {
       recentPosts = await MongoDatabase.getAllPosts(widget.db, 4);
       //get images for each post
@@ -159,7 +153,17 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                   SizedBox(height: 20),
                   Tabs("Recents"),
                   SizedBox(height: 4),
-                  SlidingCards(),
+                  completePosts == null || completePosts.length == 0
+                      ? Padding(
+                          padding: const EdgeInsets.all(64),
+                          child: Center(
+                            child: LoadingIndicator(
+                              indicatorType: Indicator.ballClipRotateMultiple,
+                              colors: const [Colors.white],
+                            ),
+                          ),
+                        )
+                      : SlidingCards(data: completePosts, db: widget.db),
                   seeAll(),
                 ],
               ),

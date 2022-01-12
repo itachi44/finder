@@ -2,17 +2,18 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:finder/helper/db/mongodb.dart';
-import 'package:finder/components/loading.dart';
 import 'package:finder/components/extension.dart';
 import 'package:finder/components/message_dialog.dart';
 import 'package:finder/components/title_text.dart';
 import 'package:async/async.dart';
 import 'package:charcode/charcode.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SeePostPage extends StatefulWidget {
   final dynamic post;
   final dynamic db;
-  SeePostPage({Key key, this.db, this.post}) : super(key: key);
+  final dynamic getImages;
+  SeePostPage({Key key, this.db, this.post, this.getImages}) : super(key: key);
 
   @override
   _SeePostPageState createState() => _SeePostPageState();
@@ -32,7 +33,11 @@ class _SeePostPageState extends State<SeePostPage>
   @override
   void initState() {
     super.initState();
-    buildResult();
+    if (widget.getImages == false) {
+      buildResult();
+    } else {
+      getImagesAndbuildResult();
+    }
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     animation = Tween<double>(begin: 0, end: 1).animate(
@@ -115,7 +120,7 @@ class _SeePostPageState extends State<SeePostPage>
 
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
-  Future buildResult() {
+  getImagesAndbuildResult() {
     return this._memoizer.runOnce(() async {
       var postCopy = Map.from(widget.post);
       completePost = await MongoDatabase.getImages(postCopy, widget.db);
@@ -143,6 +148,33 @@ class _SeePostPageState extends State<SeePostPage>
           imagePosition3 = completePost["pictures"][3]["image"];
         }
       });
+    });
+  }
+
+  buildResult() {
+    setState(() {
+      completePost = widget.post;
+      category = completePost["category"];
+      location = completePost['country'] +
+          ", " +
+          completePost['city'] +
+          " : " +
+          completePost['district'];
+      date = formatter.format(completePost["date"]).substring(0, 10);
+      price = completePost["price"];
+      size = completePost["size"];
+      title = completePost["title"];
+      description = completePost["description"];
+      imageCenter = completePost["pictures"][0]["image"];
+      if (completePost["pictures"].asMap().containsKey(1)) {
+        imagePosition1 = completePost["pictures"][1]["image"];
+      }
+      if (completePost["pictures"].asMap().containsKey(2)) {
+        imagePosition2 = completePost["pictures"][2]["image"];
+      }
+      if (completePost["pictures"].asMap().containsKey(3)) {
+        imagePosition3 = completePost["pictures"][3]["image"];
+      }
     });
   }
 
@@ -455,7 +487,18 @@ class _SeePostPageState extends State<SeePostPage>
 
   Widget _buildContent() {
     if (completePost == null) {
-      return SkeletonLoading();
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Padding(
+          padding: const EdgeInsets.all(64),
+          child: Center(
+            child: LoadingIndicator(
+              indicatorType: Indicator.ballClipRotateMultiple,
+              colors: const [Colors.white],
+            ),
+          ),
+        ),
+      );
     } else {
       return Scaffold(
           floatingActionButton: _floatingButton(), body: _buildPost());
@@ -468,7 +511,11 @@ class _SeePostPageState extends State<SeePostPage>
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return MessageDialog();
+              return MessageDialog(
+                provider: completePost["provider_id"],
+                db: widget.db,
+                post: completePost["_id"],
+              );
             });
       },
       backgroundColor: Color(0xFF162A49),

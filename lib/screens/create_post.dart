@@ -8,7 +8,6 @@ import 'package:charcode/charcode.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:finder/components/dialog.dart';
 import 'package:finder/helper/db/mongodb.dart';
-import 'package:finder/screens/provider_home.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:io';
 

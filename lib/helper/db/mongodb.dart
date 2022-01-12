@@ -133,6 +133,13 @@ class MongoDatabase {
     return posts;
   }
 
+  static Future reserve(db, message) async {
+    var postCollection = db.collection("finderApp_message");
+    print(message);
+    await postCollection.insert(new Map<String, dynamic>.from(message));
+    return "done";
+  }
+
   //get latest posts
   static Future getLatestPosts(provider, db) async {
     var providerId = ObjectId.fromHexString(provider);
