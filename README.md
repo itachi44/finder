@@ -9,6 +9,10 @@ All service providers we work with can access their accounts and post their rent
 In turn, all clients willing to find housing can make searches depending on the country, city or neighbourhood, filter publications according to their need and  means. Seeing an offer that might interest them, they can contact the provider in charge to get further details.
 Help people find their dream household in few clicks and give suppliers more visibility, this is the very purpose of this project.
 
+## Technologies 
+
+This project was built using Flutter and MongoDB Atlas Database, currently we are setting up a DataLake to manage multiple datasources (an S3 bucket and our cluster), tospeed up the distribution of files.
+
 ## installation 
 
 ### 1. you should install flutter, see the link below : this project was built using flutter version 2.0.0 with dart 2.12
