@@ -28,9 +28,9 @@ This project was built using Flutter and MongoDB Atlas Database, currently we ar
 
 #### - . create an .env file in the project directory 
 
-#### - . add environment variables e.g : 
-##### USERNAME=yourUsername 
-##### PASSWORD=yourPassword
+#### - . add environment variables : 
+##### USERNAME=guest 
+##### PASSWORD=iamaguest
 
 #### 6. enjoy :-)
 
