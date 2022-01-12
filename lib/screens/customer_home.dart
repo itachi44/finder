@@ -16,17 +16,17 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 81),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
             child: Text(
               'Finder',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: MediaQuery.of(context).size.height / 37,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -74,13 +74,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   Widget seeAll() {
     return Padding(
-        padding: EdgeInsets.only(left: 20),
+        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 19),
         child: ElevatedButton(
           child: Text(
             'See all',
             style: TextStyle(
               color: Color(0xFF162A49),
-              fontSize: 20,
+              fontSize: MediaQuery.of(context).size.height / 41,
             ),
           ),
           style: ElevatedButton.styleFrom(
@@ -148,14 +148,15 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 8),
+                  SizedBox(height: MediaQuery.of(context).size.height / 101),
                   Header(widget.db),
-                  SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).size.height / 41),
                   Tabs("Recents"),
-                  SizedBox(height: 4),
+                  SizedBox(height: MediaQuery.of(context).size.height / 203),
                   completePosts == null || completePosts.length == 0
                       ? Padding(
-                          padding: const EdgeInsets.all(64),
+                          padding: EdgeInsets.all(
+                              MediaQuery.of(context).size.height / 12.5),
                           child: Center(
                             child: LoadingIndicator(
                               indicatorType: Indicator.ballClipRotateMultiple,

@@ -60,8 +60,8 @@ class _SeePostPageState extends State<SeePostPage>
     Function onPressed,
   }) {
     return Container(
-      height: 40,
-      width: 40,
+      height: MediaQuery.of(context).size.height / 20,
+      width: MediaQuery.of(context).size.width / 9,
       padding: EdgeInsets.all(padding),
       // margin: EdgeInsets.all(padding),
       decoration: BoxDecoration(
@@ -90,15 +90,17 @@ class _SeePostPageState extends State<SeePostPage>
   bool isLiked = false;
   Widget _appBar() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width / 18.75,
+          vertical: MediaQuery.of(context).size.height / 81),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           _icon(
             Icons.arrow_back_ios,
             color: Colors.black54,
-            size: 15,
-            padding: 12,
+            size: MediaQuery.of(context).size.height / 54,
+            padding: MediaQuery.of(context).size.height / 67.5,
             isOutLine: true,
             onPressed: () {
               Navigator.of(context).pop();
@@ -106,8 +108,8 @@ class _SeePostPageState extends State<SeePostPage>
           ),
           _icon(isLiked ? Icons.favorite : Icons.favorite_border,
               color: isLiked ? Color(0xffF72804) : Color(0xffE1E2E4),
-              size: 15,
-              padding: 12,
+              size: MediaQuery.of(context).size.height / 54,
+              padding: MediaQuery.of(context).size.height / 67.5,
               isOutLine: false, onPressed: () {
             setState(() {
               isLiked = !isLiked;
@@ -192,7 +194,7 @@ class _SeePostPageState extends State<SeePostPage>
         alignment: Alignment.bottomCenter,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
             child: ClipRRect(
               borderRadius: BorderRadius.vertical(
                   top: Radius.circular(32), bottom: Radius.circular(32)),
@@ -218,11 +220,12 @@ class _SeePostPageState extends State<SeePostPage>
         child: child,
       ),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width / 37.5),
         child: AbsorbPointer(
           child: Container(
-            height: 40,
-            width: 65,
+            height: MediaQuery.of(context).size.height / 20,
+            width: MediaQuery.of(context).size.width / 6,
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.fill,
@@ -241,7 +244,7 @@ class _SeePostPageState extends State<SeePostPage>
     );
   }
 
-  Widget _availableSize() {
+  Widget _locationRow() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -249,22 +252,22 @@ class _SeePostPageState extends State<SeePostPage>
           children: [
             Icon(Icons.location_city),
             SizedBox(
-              width: 5,
+              width: MediaQuery.of(context).size.width / 75,
             ),
             TitleText(
               text: "Location",
-              fontSize: 15,
+              fontSize: MediaQuery.of(context).size.height / 54,
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: MediaQuery.of(context).size.height / 40.5),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Expanded(
               child: TitleText(
                 text: location,
-                fontSize: 14,
+                fontSize: MediaQuery.of(context).size.height / 58,
               ),
             )
           ],
@@ -281,15 +284,15 @@ class _SeePostPageState extends State<SeePostPage>
           children: [
             Icon(Icons.description_outlined),
             SizedBox(
-              width: 5,
+              width: MediaQuery.of(context).size.width / 75,
             ),
             TitleText(
               text: "Description",
-              fontSize: 15,
+              fontSize: MediaQuery.of(context).size.height / 54,
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: MediaQuery.of(context).size.height / 40.5),
         Text(description),
       ],
     );
@@ -302,7 +305,9 @@ class _SeePostPageState extends State<SeePostPage>
       minChildSize: .53,
       builder: (context, scrollController) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
+          padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 18.75,
+                  vertical: MediaQuery.of(context).size.height / 81)
               .copyWith(bottom: 0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -316,70 +321,80 @@ class _SeePostPageState extends State<SeePostPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 5),
+                SizedBox(height: MediaQuery.of(context).size.height / 162.5),
                 Container(
                   alignment: Alignment.center,
                   child: Container(
-                    width: 50,
-                    height: 5,
+                    width: MediaQuery.of(context).size.width / 7.5,
+                    height: MediaQuery.of(context).size.height / 162.5,
                     decoration: BoxDecoration(
                         color: Color(0xffa8a09b),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height / 81),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      TitleText(text: title.toUpperCase(), fontSize: 25),
+                      TitleText(
+                          text: title.toUpperCase(),
+                          fontSize: MediaQuery.of(context).size.height / 32.5),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           SizedBox(
-                            height: 10,
+                            height: MediaQuery.of(context).size.height / 81,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               TitleText(
                                 text: "\$ ",
-                                fontSize: 18,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 45,
                                 color: Color(0xffF72804),
                               ),
                               category == "house"
                                   ? TitleText(
                                       text: price.toString(),
-                                      fontSize: 25,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              32.5,
                                     )
                                   : TitleText(
                                       text: price.toString() + " per month",
-                                      fontSize: 25,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height /
+                                              32.5,
                                     ),
                             ],
                           ),
                           SizedBox(
-                            height: 10,
+                            height: MediaQuery.of(context).size.height / 81,
                           ),
                           Row(
                             children: [
                               SizedBox(
-                                width: 5,
+                                width: MediaQuery.of(context).size.width / 75,
                               ),
                               TitleText(
                                 text: size.toString(),
-                                fontSize: 22,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 37,
                               ),
                               TitleText(
                                 text: "m" + String.fromCharCode($sup2),
-                                fontSize: 18,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 45,
                               ),
                               Spacer(),
                               Text(
                                 "2022-11-10",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 58,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -391,11 +406,11 @@ class _SeePostPageState extends State<SeePostPage>
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: MediaQuery.of(context).size.height / 40.5,
                 ),
-                _availableSize(),
+                _locationRow(),
                 SizedBox(
-                  height: 20,
+                  height: MediaQuery.of(context).size.height / 40.5,
                 ),
                 _description(),
               ],
@@ -410,7 +425,7 @@ class _SeePostPageState extends State<SeePostPage>
     return Container(
         margin: EdgeInsets.symmetric(vertical: 0),
         width: MediaQuery.of(context).size.width,
-        height: 80,
+        height: MediaQuery.of(context).size.height / 10,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -470,7 +485,7 @@ class _SeePostPageState extends State<SeePostPage>
               children: <Widget>[
                 _appBar(),
                 SizedBox(
-                  height: 10,
+                  height: MediaQuery.of(context).size.height / 81,
                 ),
                 _productImage(),
                 _otherViewsWidget(),
@@ -490,7 +505,9 @@ class _SeePostPageState extends State<SeePostPage>
       return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Padding(
-          padding: const EdgeInsets.all(64),
+          padding: EdgeInsets.all(
+            MediaQuery.of(context).size.height / 12.5,
+          ),
           child: Center(
             child: LoadingIndicator(
               indicatorType: Indicator.ballClipRotateMultiple,

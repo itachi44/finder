@@ -96,14 +96,14 @@ class _LogInPageState extends State<LogInPage> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(MediaQuery.of(context).size.height / 41),
           child: Column(
             children: [
               SizedBox(
-                height: 20,
+                height: MediaQuery.of(context).size.height / 41,
               ),
               Container(
-                height: 280,
+                height: MediaQuery.of(context).size.height / 3,
                 child: Stack(children: [
                   Positioned(
                     top: 0,
@@ -133,7 +133,7 @@ class _LogInPageState extends State<LogInPage> {
                       curve: Curves.linear,
                       child: Image.network(
                         'https://ouch-cdn2.icons8.com/vSx9H3yP2D4DgVoaFPbE4HVf6M4Phd-8uRjBZBnl83g/rs:fit:784:784/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvNC84/MzcwMTY5OS1kYmU1/LTQ1ZmEtYmQ1Ny04/NTFmNTNjMTlkNTcu/c3Zn.png',
-                        height: 400,
+                        height: MediaQuery.of(context).size.height / 2,
                       ),
                     ),
                   ),
@@ -148,7 +148,7 @@ class _LogInPageState extends State<LogInPage> {
                       curve: Curves.linear,
                       child: Image.network(
                         'https://ouch-cdn2.icons8.com/fv7W4YUUpGVcNhmKcDGZp6pF1-IDEyCjSjtBB8-Kp_0/rs:fit:784:784/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvMTUv/ZjUzYTU4NDAtNjBl/Yy00ZWRhLWE1YWIt/ZGM1MWJmYjBiYjI2/LnN2Zw.png',
-                        height: 400,
+                        height: MediaQuery.of(context).size.height / 2,
                       ),
                     ),
                   ),
@@ -163,14 +163,14 @@ class _LogInPageState extends State<LogInPage> {
                       curve: Curves.linear,
                       child: Image.network(
                         'https://ouch-cdn2.icons8.com/AVdOMf5ui4B7JJrNzYULVwT1z8NlGmlRYZTtg1F6z9E/rs:fit:784:767/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvOTY5/L2NlMTY1MWM5LTRl/ZjUtNGRmZi05MjQ3/LWYzNGQ1MzhiOTQ0/Mi5zdmc.png',
-                        height: 300,
+                        height: MediaQuery.of(context).size.height / 2,
                       ),
                     ),
                   )
                 ]),
               ),
               SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height / 20,
               ),
               TextFormField(
                 controller: identifierController,
@@ -181,17 +181,17 @@ class _LogInPageState extends State<LogInPage> {
                   hintText: 'Username or e-mail',
                   labelStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 14.0,
+                    fontSize: MediaQuery.of(context).size.height / 58,
                     fontWeight: FontWeight.w400,
                   ),
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: 14.0,
+                    fontSize: MediaQuery.of(context).size.height / 58,
                   ),
                   prefixIcon: Icon(
                     Iconsax.user,
                     color: Colors.black,
-                    size: 18,
+                    size: MediaQuery.of(context).size.height / 45,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
@@ -205,7 +205,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: MediaQuery.of(context).size.height / 41,
               ),
               TextFormField(
                 controller: passwordController,
@@ -218,17 +218,17 @@ class _LogInPageState extends State<LogInPage> {
                   hintText: 'Password',
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: 14.0,
+                    fontSize: MediaQuery.of(context).size.height / 58,
                   ),
                   labelStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 14.0,
+                    fontSize: MediaQuery.of(context).size.height / 58,
                     fontWeight: FontWeight.w400,
                   ),
                   prefixIcon: Icon(
                     Iconsax.key,
                     color: Colors.black,
-                    size: 18,
+                    size: MediaQuery.of(context).size.height / 45,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
@@ -250,14 +250,14 @@ class _LogInPageState extends State<LogInPage> {
                       'Forgot Password?',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0,
+                          fontSize: MediaQuery.of(context).size.height / 58,
                           fontWeight: FontWeight.w400),
                     ),
                   )
                 ],
               ),
               SizedBox(
-                height: 30,
+                height: MediaQuery.of(context).size.height / 27,
               ),
               MaterialButton(
                 onPressed: () async {
@@ -293,19 +293,23 @@ class _LogInPageState extends State<LogInPage> {
                         (Route<dynamic> route) => false);
                   }
                 },
-                height: 45,
+                height: MediaQuery.of(context).size.height / 18,
                 color: Color(0xFF162A49),
                 child: Text(
                   "Login",
-                  style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 51),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height / 81,
+                    horizontal: MediaQuery.of(context).size.width / 7.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: MediaQuery.of(context).size.height / 27,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +318,7 @@ class _LogInPageState extends State<LogInPage> {
                     'Don\'t have an account?',
                     style: TextStyle(
                         color: Colors.grey.shade600,
-                        fontSize: 14.0,
+                        fontSize: MediaQuery.of(context).size.height / 58,
                         fontWeight: FontWeight.w400),
                   ),
                   TextButton(
@@ -323,7 +327,7 @@ class _LogInPageState extends State<LogInPage> {
                       'Register',
                       style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 14.0,
+                          fontSize: MediaQuery.of(context).size.height / 58,
                           fontWeight: FontWeight.w400),
                     ),
                   )
@@ -345,7 +349,7 @@ class _LogInPageState extends State<LogInPage> {
                 "LogIn",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: MediaQuery.of(context).size.height / 51,
                     fontWeight: FontWeight.bold),
               ),
               backgroundColor: Color(0xFF162A49),

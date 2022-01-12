@@ -51,7 +51,9 @@ class _ErrorPageState extends State<ErrorPage> {
           ),
           Container(
             height: MediaQuery.of(context).size.height / 2.5,
-            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 7,
+                vertical: MediaQuery.of(context).size.height / 16),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.only(
@@ -69,23 +71,24 @@ class _ErrorPageState extends State<ErrorPage> {
                       color: Colors.black),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: MediaQuery.of(context).size.height / 54,
                 ),
                 Text(
                   "No internet connection found. Check your connection or try again.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: MediaQuery.of(context).size.height / 51,
                   ),
                 ),
                 SizedBox(
-                  height: 60,
+                  height: MediaQuery.of(context).size.height / 13.5,
                 ),
                 MaterialButton(
                   onPressed: () async {
                     try {
-                      final result = await InternetAddress.lookup('google.com');
+                      final result =
+                          await InternetAddress.lookup('www.google.com');
                       if (result.isNotEmpty &&
                           result[0].rawAddress.isNotEmpty) {
                         dynamic db;
@@ -107,8 +110,9 @@ class _ErrorPageState extends State<ErrorPage> {
                       }
                     } on SocketException catch (_) {}
                   },
-                  height: 45,
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  height: MediaQuery.of(context).size.height / 18,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width / 7.5),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),

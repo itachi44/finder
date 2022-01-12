@@ -59,7 +59,7 @@ class _SearchResultPageState extends State<SearchResultPage>
   Widget resultCard(
       {String title, dynamic date, dynamic price, dynamic location}) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
       child: Stack(
         children: [
           Positioned(
@@ -70,15 +70,15 @@ class _SearchResultPageState extends State<SearchResultPage>
               ),
               child: Image.asset(
                 "assets/images/onboarding2.jpeg",
-                height: 100,
-                width: 100,
+                height: MediaQuery.of(context).size.height / 8,
+                width: MediaQuery.of(context).size.width / 3.75,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Container(
-            width: 360,
-            height: 100,
+            width: MediaQuery.of(context).size.width / 1.05,
+            height: MediaQuery.of(context).size.height / 8,
             decoration: BoxDecoration(
               border: Border.all(color: Color(0xFF162A49), width: 1.5),
               borderRadius: BorderRadius.circular(2),
@@ -86,34 +86,39 @@ class _SearchResultPageState extends State<SearchResultPage>
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 95),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 4),
                   child: Container(
-                    width: 250,
+                    width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(title,
                         textAlign: TextAlign.center,
                         //overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 16)),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height / 50.75)),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height / 81),
                 Padding(
-                  padding: EdgeInsets.only(left: 120),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 3),
                   child: Row(
                     children: <Widget>[
                       Text(
                         formatter.format(date).substring(0, 10),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 12,
+                          fontSize: MediaQuery.of(context).size.height / 67.5,
                           color: Colors.grey,
                         ),
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width / 18.75),
                       Text(
                         price.toString() + "\$",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
-                          fontSize: 12,
+                          fontSize: MediaQuery.of(context).size.height / 67.5,
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -123,16 +128,21 @@ class _SearchResultPageState extends State<SearchResultPage>
                 //SizedBox(height: 10),
                 Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(left: 100),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 3.75),
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.place, color: Colors.grey.shade400, size: 16),
+                      Icon(Icons.place,
+                          color: Colors.grey.shade400,
+                          size: MediaQuery.of(context).size.height / 50.75),
                       Expanded(
                         child: Text(
                           location,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              TextStyle(color: Color(0xFF162A49), fontSize: 13),
+                          style: TextStyle(
+                              color: Color(0xFF162A49),
+                              fontSize:
+                                  MediaQuery.of(context).size.height / 62.5),
                         ),
                       )
                     ],
@@ -179,7 +189,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         title: Text(
           "Results",
           style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.height / 50.75,
+              fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF162A49),
         leading: new IconButton(

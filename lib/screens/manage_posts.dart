@@ -17,7 +17,9 @@ class _ManagePostsPageState extends State<ManagePostsPage> {
         title: Text(
           "Manage your posts",
           style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.height / 51,
+              fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF162A49),
         leading: new IconButton(

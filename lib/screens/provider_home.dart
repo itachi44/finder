@@ -92,24 +92,32 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
       decoration: BoxDecoration(
           color: Color(0xf9faf9), borderRadius: BorderRadius.circular(20)),
       width: double.infinity,
-      padding: EdgeInsets.only(right: 15, top: 20, bottom: 20, left: 15),
+      padding: EdgeInsets.only(
+          right: MediaQuery.of(context).size.width / 25,
+          top: MediaQuery.of(context).size.height / 41,
+          bottom: MediaQuery.of(context).size.width / 41,
+          left: MediaQuery.of(context).size.width / 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Manage your',
-            style: TextStyle(color: Colors.black87, fontSize: 25),
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: MediaQuery.of(context).size.height / 32.5),
           ),
           SizedBox(
-            height: 5,
+            height: MediaQuery.of(context).size.height / 162.5,
           ),
           Text(
             'service',
             style: TextStyle(
-                color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
+                color: Colors.black,
+                fontSize: MediaQuery.of(context).size.height / 20,
+                fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 20,
+            height: MediaQuery.of(context).size.height / 41,
           ),
           Row(
             children: [
@@ -129,7 +137,9 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                           color: Colors.black87,
                         ),
                         hintText: "Search you're looking for",
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 15)),
+                        hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: MediaQuery.of(context).size.height / 54)),
                     onSubmitted: (value) async {
                       var searchedValue = searchController.text;
                       if (searchedValue == "") {
@@ -190,9 +200,13 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
         child: Stack(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(left: 20, top: 15, right: 20, bottom: 20),
-              margin: EdgeInsets.only(top: 45),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 19,
+                  top: MediaQuery.of(context).size.height / 54,
+                  right: MediaQuery.of(context).size.width / 19,
+                  bottom: MediaQuery.of(context).size.height / 54),
+              margin:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 18),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: Colors.white,
@@ -209,20 +223,22 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                   Text(
                     "Choose filters to apply",
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: MediaQuery.of(context).size.height / 40.5,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF162A49)),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: MediaQuery.of(context).size.height / 54,
                   ),
                   Text(
                     "Start date",
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 58),
                     textAlign: TextAlign.center,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 101.5),
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2.3,
                       child: TextFormField(
@@ -274,11 +290,13 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                   ),
                   Text(
                     "End date",
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 58),
                     textAlign: TextAlign.center,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 101.5),
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2.3,
                       child: TextFormField(
@@ -329,7 +347,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                     ),
                   ),
                   SizedBox(
-                    height: 40,
+                    height: MediaQuery.of(context).size.height / 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -374,7 +392,10 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                           },
                           child: Text(
                             "Apply",
-                            style: TextStyle(fontSize: 18, color: Colors.green),
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 45,
+                                color: Colors.green),
                           )),
                       TextButton(
                           onPressed: () {
@@ -382,7 +403,10 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                           },
                           child: Text(
                             "Close",
-                            style: TextStyle(fontSize: 18, color: Colors.red),
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 45,
+                                color: Colors.red),
                           )),
                     ],
                   ),
@@ -504,7 +528,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                         top: iconTop,
                         left: iconLeft,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0), //or 15.0
+                          borderRadius: BorderRadius.circular(20.0),
                           child: Container(
                             height: MediaQuery.of(context).size.height / 12.8,
                             width: MediaQuery.of(context).size.height / 12.8,
@@ -513,12 +537,11 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                                 isPrimaryCard
                                     ? Icons.settings
                                     : Icons.add_circle,
-                                color: Color(0xFF162A49), //TODO : icon color
+                                color: Color(0xFF162A49),
                                 size:
                                     MediaQuery.of(context).size.height / 17.92),
                           ),
                         )),
-                    //C'est le container des textes
                     Positioned(
                       bottom: textCardBottom,
                       left: textCardLeft,
@@ -680,7 +703,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
       dynamic price,
       dynamic location}) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
       child: Stack(
         children: [
           Positioned(
@@ -691,15 +714,15 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
               ),
               child: Image.asset(
                 'assets/images/onboarding2.jpeg',
-                height: 70,
-                width: 100,
+                height: MediaQuery.of(context).size.height / 11.6,
+                width: MediaQuery.of(context).size.width / 3.75,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Container(
-            width: 360,
-            height: 70,
+            width: MediaQuery.of(context).size.width / 1.05,
+            height: MediaQuery.of(context).size.height / 11.5,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white30, width: 1.5),
               borderRadius: BorderRadius.circular(2),
@@ -707,34 +730,37 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 95),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 4),
                   child: Container(
-                    width: 250,
+                    width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(title,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 16)),
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height / 51)),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height / 81),
                 Padding(
-                  padding: EdgeInsets.only(left: 120),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 3),
                   child: Row(
                     children: <Widget>[
                       Text(
                         formatter.format(date).substring(0, 10),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 12,
+                          fontSize: MediaQuery.of(context).size.height / 67.5,
                           color: Colors.grey,
                         ),
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(width: MediaQuery.of(context).size.width / 19),
                       Text(
                         price.toString() + "\$",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
-                          fontSize: 12,
+                          fontSize: MediaQuery.of(context).size.height / 67.5,
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -744,16 +770,21 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                 //SizedBox(height: 10),
                 Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(left: 100),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 3.75),
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.place, color: Colors.grey.shade400, size: 16),
+                      Icon(Icons.place,
+                          color: Colors.grey.shade400,
+                          size: MediaQuery.of(context).size.height / 50.75),
                       Expanded(
                         child: Text(
                           location,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              TextStyle(color: Color(0xFF162A49), fontSize: 13),
+                          style: TextStyle(
+                              color: Color(0xFF162A49),
+                              fontSize:
+                                  MediaQuery.of(context).size.height / 62.5),
                         ),
                       )
                     ],
@@ -802,7 +833,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
                     child: Text(
                       "Loading data...",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: MediaQuery.of(context).size.height / 50.75,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -853,7 +884,7 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
               body = Text("no more data");
             }
             return Container(
-              height: 25.0,
+              height: MediaQuery.of(context).size.height / 32.5,
               child: Center(child: body),
             );
           },
@@ -890,11 +921,11 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
   Widget _buildContent() {
     return Column(children: [
       _buildHeader(),
-      SizedBox(height: 10),
+      SizedBox(height: MediaQuery.of(context).size.height / 81),
       _featuredRow(),
-      SizedBox(height: 10),
+      SizedBox(height: MediaQuery.of(context).size.height / 81),
       Tabs("Latest posts"),
-      SizedBox(height: 10),
+      SizedBox(height: MediaQuery.of(context).size.height / 81),
       _buildLatestPosts()
     ]);
   }
@@ -909,25 +940,28 @@ class _ProviderHomePageState extends State<ProviderHomePage> {
       appBar: AppBar(
         actions: [
           Padding(
-            padding:
-                const EdgeInsets.only(left: 0, right: 20, top: 10, bottom: 10),
+            padding: EdgeInsets.only(
+                left: 0,
+                right: MediaQuery.of(context).size.width / 18.75,
+                top: MediaQuery.of(context).size.height / 81,
+                bottom: MediaQuery.of(context).size.height / 81),
             child: Stack(
               children: [
                 IconButton(
                   icon: Icon(
                     Icons.notifications_outlined,
                     color: Color(0xFF162A49),
-                    size: 26,
+                    size: MediaQuery.of(context).size.height / 31,
                   ),
-                  onPressed: () {
-                    print("yh");
-                  },
+                  onPressed: () {},
                 ),
                 Positioned(
                   top: 0.0,
                   right: -5.0,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width / 62.5,
+                        vertical: MediaQuery.of(context).size.height / 406),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.red),
                     alignment: Alignment.center,

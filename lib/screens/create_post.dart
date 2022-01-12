@@ -20,9 +20,6 @@ class NewPostPage extends StatefulWidget {
   _NewPostPageState createState() => _NewPostPageState();
 }
 
-//icon : file_upload
-//TODO resize images : 1080*720
-//TODO compress images
 class _NewPostPageState extends State<NewPostPage> {
   List<Asset> images = <Asset>[];
   List<Asset> _selectedImages = <Asset>[];
@@ -117,7 +114,8 @@ class _NewPostPageState extends State<NewPostPage> {
   _buildCategoryRow() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Padding(
-        padding: EdgeInsets.only(left: 10),
+        padding:
+            EdgeInsets.only(left: MediaQuery.of(context).size.width / 37.5),
         child: Row(
           children: [
             Text("House"),
@@ -133,9 +131,10 @@ class _NewPostPageState extends State<NewPostPage> {
           ],
         ),
       ),
-      SizedBox(height: 15),
+      SizedBox(height: MediaQuery.of(context).size.height / 54),
       Padding(
-        padding: EdgeInsets.only(left: 60),
+        padding:
+            EdgeInsets.only(left: MediaQuery.of(context).size.height / 6.25),
         child: Row(
           children: [
             Text("Apartment"),
@@ -171,7 +170,7 @@ class _NewPostPageState extends State<NewPostPage> {
                 controller: titleController,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20.0,
+                  fontSize: MediaQuery.of(context).size.height / 40.5,
                 ),
                 keyboardType: TextInputType.multiline,
                 maxLength: 80,
@@ -398,14 +397,14 @@ class _NewPostPageState extends State<NewPostPage> {
                 color: Colors.blue,
                 disabledColor: Colors.blue,
                 minWidth: 150,
-                height: 50,
+                height: MediaQuery.of(context).size.height / 16,
                 child: Text(
                   "Post",
                   style: TextStyle(color: Colors.white, fontSize: 22),
                 ),
               )),
           SizedBox(
-            height: 10,
+            height: MediaQuery.of(context).size.height / 81,
           ),
         ],
       ),
@@ -423,7 +422,9 @@ class _NewPostPageState extends State<NewPostPage> {
         title: Text(
           "Create a new post",
           style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.height / 50.75,
+              fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF162A49),
         leading: new IconButton(
@@ -445,17 +446,17 @@ class _NewPostPageState extends State<NewPostPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 15,
+                      height: MediaQuery.of(context).size.height / 54,
                     ),
                     Text(
                       'Upload your post images',
                       style: TextStyle(
-                          fontSize: 25,
+                          fontSize: MediaQuery.of(context).size.height / 32.5,
                           color: Colors.grey.shade800,
                           fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: MediaQuery.of(context).size.height / 81,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -463,7 +464,10 @@ class _NewPostPageState extends State<NewPostPage> {
                       },
                       child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 10.0),
+                              horizontal:
+                                  MediaQuery.of(context).size.width / 12.5,
+                              vertical:
+                                  MediaQuery.of(context).size.height / 81),
                           child: DottedBorder(
                             borderType: BorderType.RRect,
                             radius: Radius.circular(10),
@@ -472,7 +476,7 @@ class _NewPostPageState extends State<NewPostPage> {
                             color: Colors.blue.shade400,
                             child: Container(
                               width: double.infinity,
-                              height: 150,
+                              height: MediaQuery.of(context).size.height / 5.5,
                               decoration: BoxDecoration(
                                   color: Colors.blue.shade50.withOpacity(.3),
                                   borderRadius: BorderRadius.circular(10)),
@@ -482,15 +486,19 @@ class _NewPostPageState extends State<NewPostPage> {
                                   Icon(
                                     Iconsax.image4,
                                     color: Colors.blue,
-                                    size: 40,
+                                    size: MediaQuery.of(context).size.height /
+                                        20.3,
                                   ),
                                   SizedBox(
-                                    height: 15,
+                                    height:
+                                        MediaQuery.of(context).size.height / 54,
                                   ),
                                   Text(
                                     'Select your images',
                                     style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize:
+                                            MediaQuery.of(context).size.height /
+                                                54,
                                         color: Colors.grey.shade400),
                                   ),
                                 ],
@@ -504,12 +512,14 @@ class _NewPostPageState extends State<NewPostPage> {
                             child: Text("no image selected"),
                           )
                         : Container(
-                            height: 100,
+                            height: MediaQuery.of(context).size.height / 8,
                             child: Column(
                               children: [
                                 Expanded(
                                     child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.height /
+                                          101.5),
                                   child: GridView.builder(
                                       itemCount: _selectedFiles.length,
                                       gridDelegate:
@@ -518,7 +528,11 @@ class _NewPostPageState extends State<NewPostPage> {
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return Padding(
-                                          padding: const EdgeInsets.all(2.0),
+                                          padding: EdgeInsets.all(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  406),
                                           child: Image.memory(
                                             (base64Decode(
                                                 _selectedFiles[index])),
@@ -531,20 +545,21 @@ class _NewPostPageState extends State<NewPostPage> {
                             ),
                           ),
                     SizedBox(
-                      height: 10,
+                      height: MediaQuery.of(context).size.height / 81,
                     ),
                     Container(
                       child: Center(
                         child: Column(
                           children: [
-                            Text("Catégory ",
+                            Text("Category ",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 45,
                                   fontWeight: FontWeight.w600,
                                 )),
                             _buildCategoryRow(),
                             SizedBox(
-                              height: 10,
+                              height: MediaQuery.of(context).size.height / 81,
                             ),
                             Text("Title  ",
                                 style: TextStyle(
@@ -554,7 +569,8 @@ class _NewPostPageState extends State<NewPostPage> {
                             _buildTitleRow(),
                             Text("Location ",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 45,
                                   fontWeight: FontWeight.w600,
                                 )),
                             Column(
@@ -585,11 +601,12 @@ class _NewPostPageState extends State<NewPostPage> {
                               ],
                             ),
                             SizedBox(
-                              height: 10,
+                              height: MediaQuery.of(context).size.height / 81,
                             ),
                             Text("Price and size",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 45,
                                   fontWeight: FontWeight.w600,
                                 )),
                             Column(
@@ -614,16 +631,17 @@ class _NewPostPageState extends State<NewPostPage> {
                               ],
                             ),
                             SizedBox(
-                              height: 10,
+                              height: MediaQuery.of(context).size.height / 81,
                             ),
                             Text("Description",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 45,
                                   fontWeight: FontWeight.w600,
                                 )),
                             _buildDescriptionRow(),
                             SizedBox(
-                              height: 10,
+                              height: MediaQuery.of(context).size.height / 81,
                             ),
                             _buildPostButton()
                           ],
