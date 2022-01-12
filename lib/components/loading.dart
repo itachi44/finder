@@ -19,7 +19,7 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.height / 40.6),
         child: ListView.builder(
             itemCount: 8,
             itemBuilder: (BuildContext ctx, index) {
@@ -37,34 +37,35 @@ class _SkeletonLoadingState extends State<SkeletonLoading> {
 
   Widget box() {
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
+      margin:
+          EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 40.6),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
+            width: MediaQuery.of(context).size.width / 7.5,
+            height: MediaQuery.of(context).size.height / 16,
             decoration:
                 BoxDecoration(shape: BoxShape.rectangle, color: Colors.grey),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: MediaQuery.of(context).size.width / 18.75),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: double.infinity,
-                  height: 10,
+                  height: MediaQuery.of(context).size.height / 81,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: MediaQuery.of(context).size.height / 81,
                 ),
                 Container(
-                  width: 150,
-                  height: 10,
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  height: MediaQuery.of(context).size.height / 81,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey),

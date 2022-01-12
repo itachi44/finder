@@ -93,7 +93,10 @@ class SlidingCard extends StatelessWidget {
     return Transform.translate(
       offset: Offset(-32 * gauss * offset.sign, 0),
       child: Card(
-        margin: EdgeInsets.only(left: 8, right: 8, bottom: 30),
+        margin: EdgeInsets.only(
+            left: MediaQuery.of(context).size.width / 47,
+            right: MediaQuery.of(context).size.height / 47,
+            bottom: MediaQuery.of(context).size.height / 20),
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Column(
@@ -107,7 +110,7 @@ class SlidingCard extends StatelessWidget {
                 fit: BoxFit.none,
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: MediaQuery.of(context).size.height / 101.5),
             Expanded(
               child: CardContent(
                   title: title,
@@ -151,7 +154,7 @@ class CardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -159,9 +162,10 @@ class CardContent extends StatelessWidget {
             offset: Offset(8 * offset, 0),
             child: Text(title,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 20)),
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height / 40.5)),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: MediaQuery.of(context).size.height / 101.5),
           Transform.translate(
             offset: Offset(32 * offset, 0),
             child: Text(
@@ -169,14 +173,14 @@ class CardContent extends StatelessWidget {
               style: TextStyle(color: Colors.grey),
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: MediaQuery.of(context).size.height / 101.5),
           Transform.translate(
             offset: Offset(32 * offset, 0),
             child: Text(
               size,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: MediaQuery.of(context).size.height / 40.5,
               ),
             ),
           ),
@@ -221,11 +225,11 @@ class CardContent extends StatelessWidget {
                   price,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: MediaQuery.of(context).size.height / 40.5,
                   ),
                 ),
               ),
-              SizedBox(width: 16),
+              SizedBox(width: MediaQuery.of(context).size.width / 23.5),
             ],
           )
         ],

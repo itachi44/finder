@@ -20,8 +20,8 @@ class NavDrawer extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/fary.jpeg',
                   fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
+                  width: MediaQuery.of(context).size.width / 4,
+                  height: MediaQuery.of(context).size.height / 9,
                 ),
               ),
             ),

@@ -40,8 +40,12 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(left: 20, top: 65, right: 20, bottom: 20),
-          margin: EdgeInsets.only(top: 45),
+          padding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width / 18.75,
+              top: MediaQuery.of(context).size.width / 6,
+              right: MediaQuery.of(context).size.height / 40.5,
+              bottom: MediaQuery.of(context).size.height / 40.5),
+          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 18),
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               color: Colors.white,
@@ -57,20 +61,21 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: MediaQuery.of(context).size.height / 40.5,
                     fontWeight: FontWeight.w600,
                     color: widget.color),
               ),
               SizedBox(
-                height: 15,
+                height: MediaQuery.of(context).size.height / 54,
               ),
               Text(
                 widget.description,
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height / 58),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: 22,
+                height: MediaQuery.of(context).size.height / 37,
               ),
               Align(
                 alignment: Alignment.bottomRight,
@@ -91,7 +96,8 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                     },
                     child: Text(
                       widget.btnText,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height / 45),
                     )),
               ),
             ],

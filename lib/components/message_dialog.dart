@@ -71,7 +71,11 @@ class _MessageDialogState extends State<MessageDialog> {
         Form(
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.only(left: 20, top: 15, right: 20, bottom: 20),
+            padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 18.75,
+                top: MediaQuery.of(context).size.width / 6,
+                right: MediaQuery.of(context).size.height / 40.5,
+                bottom: MediaQuery.of(context).size.height / 40.5),
             margin: EdgeInsets.only(top: 45),
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
@@ -90,16 +94,17 @@ class _MessageDialogState extends State<MessageDialog> {
                   "Reserve with the provider",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: MediaQuery.of(context).size.height / 40.5,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: MediaQuery.of(context).size.height / 54,
                 ),
                 Text(
                   "Enter your contact information.",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height / 58),
                   textAlign: TextAlign.center,
                 ),
                 Padding(
@@ -135,7 +140,7 @@ class _MessageDialogState extends State<MessageDialog> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: MediaQuery.of(context).size.height / 37,
                 ),
                 Text(
                   "Perhaps you would like to leave him a message?",
@@ -178,7 +183,7 @@ class _MessageDialogState extends State<MessageDialog> {
                   ),
                 ),
                 SizedBox(
-                  height: 22,
+                  height: MediaQuery.of(context).size.height / 45,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -236,7 +241,9 @@ class _MessageDialogState extends State<MessageDialog> {
                         },
                         child: Text(
                           "submit",
-                          style: TextStyle(fontSize: 18, color: Colors.green),
+                          style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.height / 58,
+                              color: Colors.green),
                         )),
                     TextButton(
                         onPressed: () async {
@@ -244,7 +251,9 @@ class _MessageDialogState extends State<MessageDialog> {
                         },
                         child: Text(
                           "close",
-                          style: TextStyle(fontSize: 18, color: Colors.red),
+                          style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.height / 58,
+                              color: Colors.red),
                         )),
                   ],
                 ),

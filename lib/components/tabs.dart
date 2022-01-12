@@ -8,7 +8,7 @@ class Tabs extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        SizedBox(width: 24),
+        SizedBox(width: MediaQuery.of(context).size.width / 15.5),
         MyTab(text: value, isSelected: true)
       ],
     );
@@ -25,21 +25,23 @@ class MyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 101.5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             text,
             style: TextStyle(
-              fontSize: isSelected ? 16 : 14,
+              fontSize: isSelected
+                  ? MediaQuery.of(context).size.height / 50.75
+                  : MediaQuery.of(context).size.height / 58,
               color: isSelected ? Colors.black : Colors.grey,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
           Container(
-            height: 6,
-            width: 20,
+            height: MediaQuery.of(context).size.height / 135,
+            width: MediaQuery.of(context).size.width / 18.75,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               color: isSelected ? Color(0xFFFF5A1D) : Colors.white,
