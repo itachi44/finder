@@ -4,9 +4,14 @@ A new Flutter project.
 
 ## About Finder
 
-finder allows anyone who wants to rent an apartment or a house to find it through this application.
-On the one hand there is a provider part where providers can register, make their available rentals publications and manage their publications and profile.
-On the other hand we have the client part where the client can come and make a search for an apartment or a house.
+Finder allows anyone who wants to rent or buy a new house or apartment to find it through this application, in the simplest possible way.
+All service providers we work with can access their accounts and post their rental  or sales offers through publications. 
+In turn, all clients willing to find housing can make searches depending on the country, city or neighbourhood, filter publications according to their need and  means. Seeing an offer that might interest them, they can contact the provider in charge to get further details.
+Help people find their dream household in few clicks and give suppliers more visibility, this is the very purpose of this project.
+
+## Technologies 
+
+This project was built using Flutter and MongoDB Atlas Database, currently we are setting up a DataLake to manage multiple datasources (an S3 bucket and our cluster), tospeed up the distribution of files.
 
 ## installation 
 
@@ -23,10 +28,12 @@ On the other hand we have the client part where the client can come and make a s
 
 #### - . create an .env file in the project directory 
 
-#### - . add environment variables e.g : 
-##### USERNAME=yourUsername 
-##### PASSWORD=yourPassword
+#### - . add environment variables : 
+##### USERNAME=guest 
+##### PASSWORD=iamaguest
 
 #### 6. enjoy :-)
 
 ## [Demo section]
+
+[![Finder](https://img.youtube.com/vi/ClZATpg_5iw/0.jpg)](https://www.youtube.com/watch?v=ClZATpg_5iw&ab_channel=CheikhAhmadouBambaDIOP)
