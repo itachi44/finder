@@ -6,7 +6,7 @@ A new Flutter project.
 
 Finder allows anyone who wants to rent or buy a new house or apartment to find it through this application, in the simplest possible way.
 All service providers we work with can access their accounts and post their rental  or sales offers through publications. 
-In turn, all clients willing to find housing can make searches depending on the country, city or neighbourhood, filter publications according to their need and  means. Seeing an offer that might interest them, they can contact the provider in charge to get further details.
+In turn, all clients willing to find housing can make searches depending on the country, city or neighborhood, filter publications according to their need and  means. Seeing an offer that might interest them, they can contact the provider in charge to get further details.
 Help people find their dream household in few clicks and give suppliers more visibility, this is the very purpose of this project.
 
 ## Technologies 
